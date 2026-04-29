@@ -120,8 +120,8 @@
     <div class="terminal">
         <div class="header-top">
 ╔══════════════════════════════════════════════════╗
-║ SEBAS_DRD // THOMSON NEO17 // MATRIX v3.0 ║
-║ >> FULL TECHNO SYSTEM ONLINE << ║
+║ SEBAS_DRD // THOMSON NEO17 // MATRIX v3.1 ║
+║ >> URL ENCODED TECHNO SYSTEM << ║
 ╚══════════════════════════════════════════════════╝
             <div class="title">MATRIX_TERMINAL.EXE</div>
         </div>
@@ -182,10 +182,10 @@
         const playlistBtns = document.querySelectorAll('.playlist-btn');
         const visualizer = document.getElementById('visualizer');
 
-        // PLAYLIST AVEC LES VRAIS NOMS DE FICHIERS
+        // PLAYLIST AVEC %20 POUR L'ESPACE
         const playlist = [
             { name: 'WATERMELLO SPORT', file: './watermello-sport-techno.mp3.mp3' },
-            { name: 'NEON_PULSE.EXE', file: './neon pulse.mp3.mp3' },
+            { name: 'NEON_PULSE.EXE', file: './neon%20pulse.mp3.mp3' },
             { name: 'CYBER_WAGNER.EXE', file: './cyber_wagner.mp3.mp3' }
         ];
 
@@ -268,8 +268,9 @@
             status.textContent = 'TRACK LOADED - READY';
         });
 
-        audio.addEventListener('error', () => {
-            status.textContent = 'ERREUR: FICHIER.MP3.MP3 INTROUVABLE';
+        audio.addEventListener('error', (e) => {
+            console.log('Erreur audio:', audio.error);
+            status.textContent = 'ERREUR: FICHIER INTROUVABLE';
         });
 
         audio.addEventListener('ended', () => {
