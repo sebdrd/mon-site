@@ -81,76 +81,100 @@
     <audio id="matrixAudio" loop preload="auto">
         <source src="https://cdn.pixabay.com/download/audio/2022/08/03/audio_54ca749c70.mp3" type="audio/mpeg">
     </audio>
-    <script>
-        // MATRICE
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ';
-        const fontSize = 14; const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
-        let isRunning = true;
-        function draw() {
-            ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = '#0F0'; ctx.font = fontSize + 'px monospace';
-            for(let i = 0; i < drops.length; i++) {
-                const text = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            }
+   <script>
+    // MATRICE
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ';
+    const fontSize = 14; const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+    let isRunning = true;
+    function draw() {
+        ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = '#0F0'; ctx.font = fontSize + 'px monospace';
+        for(let i = 0; i < drops.length; i++) {
+            const text = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
         }
-        function animate() { if(isRunning) { draw(); requestAnimationFrame(animate); } }
-        animate();
-        // LECTEUR AUDIO MATRIX
-        const audio = document.getElementById('matrixAudio');
-        const audioBtn = document.getElementById('audioBtn');
-        const audioStatus = audioBtn.querySelector('.audio-status');
-        const progress = document.getElementById('progress');
-        let musicOn = false;
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+    function animate() { if(isRunning) { draw(); requestAnimationFrame(animate); } }
+    animate();
+    // LECTEUR AUDIO MATRIX - VERSION QUI MARCHE
+    const audio = document.getElementById('matrixAudio');
+    const audioBtn = document.getElementById('audioBtn');
+    const audioStatus = audioBtn.querySelector('.audio-status');
+    const progress = document.getElementById('progress');
+    let musicOn = false;
+    let audioLoaded = false;
+    audio.volume = 0.7; // Volume à 70% pour pas exploser les oreilles
+    audio.addEventListener('loadeddata', () => {
+        audioLoaded = true;
+        audioStatus.textContent = '► CLIQUER POUR LANCER';
+    });
+    audio.addEventListener('error', () => {
+        audioStatus.textContent = '⚠ ERREUR AUDIO';
+    });
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return '0:00';
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+    function updateProgress() {
+        if (audio.duration) {
+            const percent = (audio.currentTime / audio.duration) * 100;
+            progress.style.width = percent + '%';
+            audioStatus.textContent = `► ${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
         }
-        function updateProgress() {
-            if (audio.duration) {
-                const percent = (audio.currentTime / audio.duration) * 100;
-                progress.style.width = percent + '%';
-                audioStatus.textContent = `► ${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
-            }
+    }
+    async function toggleMusic() {
+        if (!audioLoaded) {
+            audioStatus.textContent = '⚠ CHARGEMENT...';
+            return;
         }
-        function toggleMusic() {
+        
+        try {
             if (musicOn) {
                 audio.pause();
-                audioStatus.textContent = '■ PAUSE - CLIQUER POUR JOUER';
+                audioStatus.textContent = '■ PAUSE';
                 musicOn = false;
             } else {
-                audio.play();
+                await audio.play();
                 audioStatus.textContent = '► LECTURE EN COURS';
                 musicOn = true;
             }
+        } catch (err) {
+            audioStatus.textContent = '⚠ CLIQUEZ DABORD SUR LA PAGE';
+            console.log('Erreur:', err);
         }
-        audio.addEventListener('timeupdate', updateProgress);
-        audio.addEventListener('ended', () => { musicOn = false; });
-        audioBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleMusic();
-        });
-        // COMPTEUR
-        fetch('https://api.countapi.xyz/hit/sebdrd-matrix/visits')
-      .then(res => res.json()).then(res => {
-            document.getElementById('visitorCount').textContent = `👁️ VISITEURS: ${res.value}`;
-        }).catch(() => {
-            document.getElementById('visitorCount').textContent = '👁️ VISITEURS: ∞';
-        });
-        // CONTROLES
-        document.addEventListener('keydown', (e) => {
-            if(e.code === 'Space') { isRunning =!isRunning; if(isRunning) animate(); e.preventDefault(); }
-            if(e.code === 'KeyM') toggleMusic();
-        });
-        document.addEventListener('click', () => { if(!musicOn) toggleMusic(); }, { once: true });
-        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
-    </script>
+    }
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('ended', () => { musicOn = false; audioStatus.textContent = '■ FINI'; });
+    audioBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMusic();
+    });
+    // COMPTEUR
+    fetch('https://api.countapi.xyz/hit/sebdrd-matrix/visits')
+ .then(res => res.json()).then(res => {
+        document.getElementById('visitorCount').textContent = `👁️ VISITEURS: ${res.value}`;
+    }).catch(() => {
+        document.getElementById('visitorCount').textContent = '👁️ VISITEURS: ∞';
+    });
+    // CONTROLES
+    document.addEventListener('keydown', (e) => {
+        if(e.code === 'Space') { isRunning =!isRunning; if(isRunning) animate(); e.preventDefault(); }
+        if(e.code === 'KeyM') toggleMusic();
+    });
+    
+    // Premier clic sur la page = débloque l'audio
+    document.addEventListener('click', () => {
+        if(!musicOn && audioLoaded) toggleMusic();
+    }, { once: true });
+    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+</script>
 </body>
 </html>
