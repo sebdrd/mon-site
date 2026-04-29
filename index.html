@@ -28,7 +28,7 @@
     <div class="counter" id="visitorCount">👁️ CHARGEMENT...</div>
     <div class="audio-player" id="audioBtn">
         <div class="audio-title">WAGNER_TECHNO.EXE</div>
-        <div class="audio-status">► CLIQUE ICI POUR LANCER</div>
+        <div class="audio-status">► CLIQUE POUR LANCER</div>
         <div class="progress-bar"><div class="progress" id="progress"></div></div>
     </div>
     <div class="content">
@@ -37,16 +37,13 @@
         <p>8Go de RAM + SSD + VS Code = je peux tout faire</p>
         <p>Chevauchée des Walkyries - Techno Edit</p>
     </div>
-    <div class="hint">ESPACE = pluie on/off | M = musique on/off | Clique n'importe où pour démarrer</div>
+    <div class="hint">ESPACE = pluie on/off | M = musique on/off</div>
 
-    <!-- MP3 QUI MARCHE GARANTI - Techno libre -->
-    <audio id="matrixAudio" loop preload="auto" crossorigin="anonymous">
-        <source src="https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg" type="audio/ogg">
-        <source src="https://commondatastorage.googleapis.com/codeskulptor-assets/soundtracks/space.ogg" type="audio/ogg">
+    <audio id="matrixAudio" loop preload="auto">
+        <source src="./techno.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // MATRICE
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -67,24 +64,15 @@
         function animate() { if(isRunning) { draw(); requestAnimationFrame(animate); } }
         animate();
 
-        // LECTEUR AUDIO - VERSION BULLETPROOF
         const audio = document.getElementById('matrixAudio');
         const audioBtn = document.getElementById('audioBtn');
         const audioStatus = audioBtn.querySelector('.audio-status');
         const progress = document.getElementById('progress');
         let musicOn = false;
+        audio.volume = 0.7;
 
-        audio.volume = 0.5;
-
-        // Dès que possible, on dit que c'est prêt
-        audio.addEventListener('canplay', () => {
-            audioStatus.textContent = '► PRET - CLIQUE POUR LANCER';
-        });
-
-        audio.addEventListener('error', (e) => {
-            audioStatus.textContent = '⚠ ERREUR: ' + e.message;
-            console.log('Erreur audio:', audio.error);
-        });
+        audio.addEventListener('canplay', () => { audioStatus.textContent = '► PRET - CLIQUE POUR LANCER'; });
+        audio.addEventListener('error', () => { audioStatus.textContent = '⚠ FICHIER MANQUANT'; });
 
         function formatTime(seconds) {
             if (isNaN(seconds)) return '0:00';
@@ -110,26 +98,23 @@
                     musicOn = false;
                 } else {
                     await audio.play();
-                    audioStatus.textContent = '► LECTURE EN COURS';
+                    audioStatus.textContent = '► LECTURE';
                     musicOn = true;
                 }
             } catch (err) {
-                audioStatus.textContent = '⚠ CLIQUEZ SUR LA PAGE DABORD';
-                console.error(err);
+                audioStatus.textContent = '⚠ CLIQUE SUR LA PAGE DABORD';
             }
         });
 
         audio.addEventListener('timeupdate', updateProgress);
 
-        // COMPTEUR
         fetch('https://api.countapi.xyz/hit/sebdrd-matrix/visits')
-   .then(res => res.json()).then(res => {
+  .then(res => res.json()).then(res => {
             document.getElementById('visitorCount').textContent = `👁️ VISITEURS: ${res.value}`;
         }).catch(() => {
             document.getElementById('visitorCount').textContent = '👁️ VISITEURS: ∞';
         });
 
-        // CONTROLES
         document.addEventListener('keydown', (e) => {
             if(e.code === 'Space') { isRunning =!isRunning; if(isRunning) animate(); e.preventDefault(); }
             if(e.code === 'KeyM') audioBtn.click();
