@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATRIX_TERMINAL.exe</title>
+    <title>MATRIX_TERMINAL</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -120,17 +120,17 @@
     <div class="terminal">
         <div class="header-top">
 ╔══════════════════════════════════════════════════╗
-║ SEBAS_DRD // THOMSON NEO17 // MATRIX v3.1 ║
-║ >> URL ENCODED TECHNO SYSTEM << ║
+║ SEBAS_DRD // THOMSON NEO17 // MATRIX v4.0 ║
+║ >> CLEAN TECHNO SYSTEM LOADED << ║
 ╚══════════════════════════════════════════════════╝
-            <div class="title">MATRIX_TERMINAL.EXE</div>
+            <div class="title">MATRIX TERMINAL</div>
         </div>
 
         <div class="player">
-            <button class="button" id="playBtn">► START_TECHNO.EXE</button>
+            <button class="button" id="playBtn">► START TECHNO</button>
             <button class="button playlist-btn" data-track="0">01. WATERMELLO SPORT</button>
-            <button class="button playlist-btn" data-track="1">02. NEON_PULSE.EXE</button>
-            <button class="button playlist-btn" data-track="2">03. CYBER_WAGNER.EXE</button>
+            <button class="button playlist-btn" data-track="1">02. NEON PULSE</button>
+            <button class="button playlist-btn" data-track="2">03. CYBER WAGNER</button>
 
             <div class="visualizer" id="visualizer"></div>
 
@@ -182,11 +182,11 @@
         const playlistBtns = document.querySelectorAll('.playlist-btn');
         const visualizer = document.getElementById('visualizer');
 
-        // PLAYLIST AVEC %20 POUR L'ESPACE
+        // PLAYLIST SIMPLE SANS ESPACE NI.EXE
         const playlist = [
-            { name: 'WATERMELLO SPORT', file: './watermello-sport-techno.mp3.mp3' },
-            { name: 'NEON_PULSE.EXE', file: './neon%20pulse.mp3.mp3' },
-            { name: 'CYBER_WAGNER.EXE', file: './cyber_wagner.mp3.mp3' }
+            { name: 'WATERMELLO SPORT', file: './track1.mp3' },
+            { name: 'NEON PULSE', file: './track2.mp3' },
+            { name: 'CYBER WAGNER', file: './track3.mp3' }
         ];
 
         let currentTrack = 0;
@@ -234,7 +234,7 @@
             }
             if (audio.paused) {
                 audio.play().then(() => {
-                    playBtn.textContent = '■ STOP_TECHNO.EXE';
+                    playBtn.textContent = '■ STOP TECHNO';
                     status.textContent = '► PLAYING...';
                     updateVisualizer();
                 }).catch(e => {
@@ -242,7 +242,7 @@
                 });
             } else {
                 audio.pause();
-                playBtn.textContent = '► START_TECHNO.EXE';
+                playBtn.textContent = '► START TECHNO';
                 status.textContent = 'SYSTEM PAUSED';
             }
         }
@@ -268,8 +268,7 @@
             status.textContent = 'TRACK LOADED - READY';
         });
 
-        audio.addEventListener('error', (e) => {
-            console.log('Erreur audio:', audio.error);
+        audio.addEventListener('error', () => {
             status.textContent = 'ERREUR: FICHIER INTROUVABLE';
         });
 
