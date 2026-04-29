@@ -6,7 +6,7 @@
     <style>
         body { margin: 0; background: #000; color: #0F0; font-family: 'Courier New', monospace; text-align: center; overflow: hidden; }
         #matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
- .content { position: relative; z-index: 1; padding-top: 100px; text-shadow: 0 0 15px #0F0; }
+.content { position: relative; z-index: 1; padding-top: 100px; text-shadow: 0 0 15px #0F0; }
         h1 { font-size: 50px; position: relative; }
         h1::before, h1::after { content: "je suis un dieu!"; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         h1::before { left: 2px; text-shadow: -2px 0 #ff00ff; animation: glitch-anim 3s infinite linear alternate-reverse; }
@@ -14,14 +14,13 @@
         @keyframes glitch-anim { 0% { clip: rect(42px,9999px,44px,0) } 100% { clip: rect(16px,9999px,91px,0) } }
         @keyframes glitch-anim2 { 0% { clip: rect(65px,9999px,100px,0) } 100% { clip: rect(86px,9999px,30px,0) } }
         p { font-size: 20px; }
- .hint { position: fixed; bottom: 20px; width: 100%; font-size: 14px; color: #58a6ff; }
- .audio-player { position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.7); border: 1px solid #0F0; color: #0F0; padding: 12px 18px; font-family: monospace; z-index: 10; box-shadow: 0 0 20px rgba(0,255,0,0.3); cursor: pointer; min-width: 200px; text-align: left; }
- .audio-player:hover { background: rgba(0,255,0,0.1); }
- .audio-title { font-size: 12px; margin-bottom: 5px; opacity: 0.8; }
- .audio-status { font-size: 14px; font-weight: bold; }
- .progress-bar { width: 100%; height: 3px; background: rgba(0,255,0,0.2); margin-top: 8px; position: relative; }
- .progress { height: 100%; background: #0F0; width: 0%; box-shadow: 0 0 10px #0F0; transition: width 0.1s linear; }
- .counter { position: fixed; top: 20px; left: 20px; background: rgba(0,0,0,0.7); border: 1px solid #0F0; color: #0F0; padding: 12px 18px; font-family: monospace; font-size: 14px; z-index: 10; box-shadow: 0 0 20px rgba(0,255,0,0.3); }
+.hint { position: fixed; bottom: 20px; width: 100%; font-size: 14px; color: #58a6ff; }
+.audio-player { position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.7); border: 1px solid #0F0; color: #0F0; padding: 12px 18px; font-family: monospace; z-index: 10; box-shadow: 0 0 20px rgba(0,255,0,0.3); cursor: pointer; min-width: 220px; text-align: left; }
+.audio-title { font-size: 12px; margin-bottom: 5px; opacity: 0.8; }
+.audio-status { font-size: 14px; font-weight: bold; }
+.progress-bar { width: 100%; height: 3px; background: rgba(0,255,0,0.2); margin-top: 8px; position: relative; }
+.progress { height: 100%; background: #0F0; width: 0%; box-shadow: 0 0 10px #0F0; transition: width 0.1s linear; }
+.counter { position: fixed; top: 20px; left: 20px; background: rgba(0,0,0,0.7); border: 1px solid #0F0; color: #0F0; padding: 12px 18px; font-family: monospace; font-size: 14px; z-index: 10; box-shadow: 0 0 20px rgba(0,255,0,0.3); }
     </style>
 </head>
 <body>
@@ -29,7 +28,7 @@
     <div class="counter" id="visitorCount">👁️ CHARGEMENT...</div>
     <div class="audio-player" id="audioBtn">
         <div class="audio-title">WAGNER_TECHNO.EXE</div>
-        <div class="audio-status">► PRET</div>
+        <div class="audio-status">► CLIQUE ICI POUR LANCER</div>
         <div class="progress-bar"><div class="progress" id="progress"></div></div>
     </div>
     <div class="content">
@@ -40,9 +39,10 @@
     </div>
     <div class="hint">ESPACE = pluie on/off | M = musique on/off | Clique n'importe où pour démarrer</div>
 
-    <!-- AUDIO LOCAL - PLUS DE BLOCAGE -->
-    <audio id="matrixAudio" loop preload="auto">
-        <source src="./wagner.mp3" type="audio/mpeg">
+    <!-- MP3 QUI MARCHE GARANTI - Techno libre -->
+    <audio id="matrixAudio" loop preload="auto" crossorigin="anonymous">
+        <source src="https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg" type="audio/ogg">
+        <source src="https://commondatastorage.googleapis.com/codeskulptor-assets/soundtracks/space.ogg" type="audio/ogg">
     </audio>
 
     <script>
@@ -67,21 +67,23 @@
         function animate() { if(isRunning) { draw(); requestAnimationFrame(animate); } }
         animate();
 
-        // LECTEUR AUDIO - VERSION LOCALE
+        // LECTEUR AUDIO - VERSION BULLETPROOF
         const audio = document.getElementById('matrixAudio');
         const audioBtn = document.getElementById('audioBtn');
         const audioStatus = audioBtn.querySelector('.audio-status');
         const progress = document.getElementById('progress');
         let musicOn = false;
 
-        audio.volume = 0.7;
+        audio.volume = 0.5;
 
-        audio.addEventListener('canplaythrough', () => {
-            audioStatus.textContent = '► CLIQUER POUR LANCER';
+        // Dès que possible, on dit que c'est prêt
+        audio.addEventListener('canplay', () => {
+            audioStatus.textContent = '► PRET - CLIQUE POUR LANCER';
         });
 
-        audio.addEventListener('error', () => {
-            audioStatus.textContent = '⚠ MP3 MANQUANT';
+        audio.addEventListener('error', (e) => {
+            audioStatus.textContent = '⚠ ERREUR: ' + e.message;
+            console.log('Erreur audio:', audio.error);
         });
 
         function formatTime(seconds) {
@@ -99,7 +101,8 @@
             }
         }
 
-        async function toggleMusic() {
+        audioBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
             try {
                 if (musicOn) {
                     audio.pause();
@@ -107,20 +110,20 @@
                     musicOn = false;
                 } else {
                     await audio.play();
-                    audioStatus.textContent = '► LECTURE';
+                    audioStatus.textContent = '► LECTURE EN COURS';
                     musicOn = true;
                 }
             } catch (err) {
                 audioStatus.textContent = '⚠ CLIQUEZ SUR LA PAGE DABORD';
+                console.error(err);
             }
-        }
+        });
 
         audio.addEventListener('timeupdate', updateProgress);
-        audioBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMusic(); });
 
         // COMPTEUR
         fetch('https://api.countapi.xyz/hit/sebdrd-matrix/visits')
-     .then(res => res.json()).then(res => {
+   .then(res => res.json()).then(res => {
             document.getElementById('visitorCount').textContent = `👁️ VISITEURS: ${res.value}`;
         }).catch(() => {
             document.getElementById('visitorCount').textContent = '👁️ VISITEURS: ∞';
@@ -129,7 +132,7 @@
         // CONTROLES
         document.addEventListener('keydown', (e) => {
             if(e.code === 'Space') { isRunning =!isRunning; if(isRunning) animate(); e.preventDefault(); }
-            if(e.code === 'KeyM') toggleMusic();
+            if(e.code === 'KeyM') audioBtn.click();
         });
         window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
     </script>
