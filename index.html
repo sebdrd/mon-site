@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <title>Thomson NEO17 Matrix</title>
     <style>
-        body { 
+        body {
             margin: 0;
-            background: #000; 
-            color: #0F0; 
-            font-family: 'Courier New', monospace; 
-            text-align: center; 
+            background: #000;
+            color: #0F0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
             overflow: hidden;
         }
         #matrix {
@@ -20,18 +20,17 @@
             height: 100%;
             z-index: -1;
         }
-     .content {
+    .content {
             position: relative;
             z-index: 1;
             padding-top: 100px;
             text-shadow: 0 0 15px #0F0;
         }
-        h1 { 
+        h1 {
             font-size: 50px;
             position: relative;
             animation: glitch 2s infinite;
         }
-        /* EFFET GLITCH CYBERPUNK */
         h1::before,
         h1::after {
             content: "je suis un dieu!";
@@ -71,16 +70,15 @@
             30% { clip: rect(1px, 9999px, 66px, 0); }
             100% { clip: rect(86px, 9999px, 30px, 0); }
         }
-        
         p { font-size: 20px; }
-     .hint { 
-            position: fixed; 
-            bottom: 20px; 
-            width: 100%; 
-            font-size: 14px; 
+    .hint {
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
+            font-size: 14px;
             color: #58a6ff;
         }
-     .audio-control {
+    .audio-control {
             position: fixed;
             top: 20px;
             right: 20px;
@@ -90,10 +88,10 @@
             padding: 10px 15px;
             cursor: pointer;
             font-family: monospace;
+            z-index: 10;
         }
-     .audio-control:hover { background: rgba(0,255,0,0.3); }
-      
-     .counter {
+    .audio-control:hover { background: rgba(0,255,0,0.3); }
+    .counter {
             position: fixed;
             top: 20px;
             left: 20px;
@@ -103,15 +101,14 @@
             padding: 10px 15px;
             font-family: monospace;
             font-size: 14px;
+            z-index: 10;
         }
     </style>
 </head>
 <body>
     <canvas id="matrix"></canvas>
-    
-    <div class="counter" id="visitorCount">👁️ Visiteurs: chargement...</div>
-    <div class="audio-control" onclick="toggleMusic()">🔊 MUSIQUE: OFF</div>
-    
+    <div class="counter" id="visitorCount">👁️ Visiteurs:...</div>
+    <div class="audio-control" id="audioBtn">🔊 MUSIQUE: OFF</div>
     <div class="content">
         <h1>je suis un dieu!</h1>
         <p>Mon premier site codé sur un Celeron N4020</p>
@@ -132,9 +129,7 @@
         const fontSize = 14;
         const columns = canvas.width / fontSize;
         const drops = Array(Math.floor(columns)).fill(1);
-        let animationId;
         let isRunning = true;
-        
         function draw() {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -150,49 +145,53 @@
         function animate() {
             if (isRunning) {
                 draw();
-                animationId = requestAnimationFrame(animate);
+                requestAnimationFrame(animate);
             }
         }
         animate();
-        
-        // MUSIQUE
+        // MUSIQUE - VERSION CORRIGÉE
         const audio = document.getElementById('matrixAudio');
-        const audioBtn = document.querySelector('.audio-control');
+        const audioBtn = document.getElementById('audioBtn');
         let musicOn = false;
         function toggleMusic() {
             if (musicOn) {
                 audio.pause();
                 audioBtn.textContent = '🔊 MUSIQUE: OFF';
+                musicOn = false;
             } else {
-                audio.play();
+                audio.play().catch(e => console.log('Erreur audio:', e));
                 audioBtn.textContent = '🔇 MUSIQUE: ON';
+                musicOn = true;
             }
-            musicOn =!musicOn;
         }
-        
-        // COMPTEUR DE VISITEURS - utilise countapi.xyz gratuit
+        audioBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMusic();
+        });
+        // COMPTEUR DE VISITEURS
         fetch('https://api.countapi.xyz/hit/sebdrd-matrix/visits')
-           .then(res => res.json())
-           .then(res => {
+          .then(res => res.json())
+          .then(res => {
                 document.getElementById('visitorCount').textContent = `👁️ Visiteurs: ${res.value}`;
             })
-           .catch(() => {
+          .catch(() => {
                 document.getElementById('visitorCount').textContent = '👁️ Visiteurs: ∞';
             });
-        
-        // CONTROLES
+        // CONTROLES CLAVIER
         document.addEventListener('keydown', (e) => {
             if(e.code === 'Space') {
                 isRunning =!isRunning;
                 if(isRunning) animate();
+                e.preventDefault();
             }
-            if(e.code === 'KeyM') toggleMusic();
+            if(e.code === 'KeyM') {
+                toggleMusic();
+            }
         });
-        
+        // Démarrer la musique au premier clic
         document.addEventListener('click', () => {
             if(!musicOn) toggleMusic();
         }, { once: true });
-        
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
