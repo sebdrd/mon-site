@@ -1,105 +1,148 @@
-<!DOCTYPE html>
+<!DOCTOTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Thomson NEO17 Matrix</title>
+    <head>
+            <meta charset="utf-8"
+            <title>Thomson NE017 Power</title>
     <style>
-        body { 
+        body {
             margin: 0;
-            background: #000; 
-            color: #0F0; 
-            font-family: 'Courier New', monospace; 
-            text-align: center; 
-            overflow: hidden;
+            background: #000;
+            color: #0F0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            overflow:hidden;
         }
-        #matrix {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        #matrix{
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
             z-index: -1;
         }
-       .content {
+        .content{ 
             position: relative;
             z-index: 1;
             padding-top: 100px;
-            text-shadow: 0 0 10px #0F0;
+            text-shadow: 0 0 15px #0F0
         }
         h1 { font-size: 50px; }
-        p { font-size: 20px; }
-       .hint { 
-            position: fixed; 
-            bottom: 20px; 
-            width: 100%; 
-            font-size: 14px; 
-            color: #58a6ff;
+        p { font size: 50px; }
+        .hint{
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
+            font-size: 14px;
+            color: #58a6ff
         }
+        .audio-control{
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,255,0,0.1);
+            border: 1px solid #0F0;
+            color: #0F0;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-family: monospace;
+        }
+    .audio-control:hover {
+        background: rgba(0,255,0,0.3);
+    }
     </style>
-</head>
+<head>
 <body>
-    <canvas id="matrix"></canvas>
-    <div class="content">
-        <h1>je suis un dieu!</h1>
-        <p>Mon premier site codé sur un Celeron N4020</p>
-        <p>8Go de RAM + SSD + VS Code = je peux tout faire</p>
-        <p>Bienvenue dans la Matrice</p>
-    </div>
-    <div class="hint">Appuie sur ESPACE pour activer/désactiver la pluie de code</div>
-    <script>
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
-        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ';
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
-        let animationId;
-        let isRunning = true;
-        
-        function draw() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.fillStyle = '#0F0';
-            ctx.font = fontSize + 'px monospace';
-            
-            for(let i = 0; i < drops.length; i++) {
-                const text = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                
-                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
+    <convas id="matrix"></convas>
+
+    <div class="audio-control" onclick="toggleMusic()">🔊 Musique: OFF</div>
+
+<div classe="content">
+    <h1>je suis un dieu !</h1>
+    <p>Mon premier site codé sur un celeron N4020 </p>
+    <p>8Go de RAM + SSD + VS Code = je peux tou faire</p>
+    <p>Bienvenue dans la Matrice</p>
+</div>
+<div class="hint">Apuie sur ESPACE pour activer/désactiver la pluie de code</div>
+
+<!-- Audio Matrix theme - version libre de droit-->
+<Audio id="matrixAudio" Loop>
+    <source src"https://cdn.pixabay.com/download/audio/2022/05/27audio_1808fbf07a.mp3" type=""audio/mpeg">
+    </audio>
+
+<script>
+    //MATRICE
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+
+    const chars = ''01アイウエオカキクケコサシスセソタチツテトナニヌネノ';
+    const fontSize = 14;
+    const columns = convas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+    let animationId;
+    let isRunning = true;
+
+
+    function draw() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#0F0' ;
+        ctx.font = fontSize + 'px monospace';
+        for(let i = 0; i < drops.length; i++) {
+            const text = chars[math.random() * chars.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
             }
+            drops[i]++;
         }
-        
-        function animate() {
-            if (isRunning) {
-                draw();
-                animationId = requestAnimationFrame(animate);
-            }
-        }
-        
-        animate();
-        
-        // Pause avec Espace
-        document.addEventListener('keydown', (e) => {
-            if(e.code === 'Space') {
-                isRunning =!isRunning;
-                if(isRunning) animate();
-            }
-        });
-        
-        // Resize
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-    </script>
+    }
+function animate() {
+    if (isRunning) {
+        draw();
+        animationId = requestAnimationFrame(animate);
+
+    }
+}
+animate();
+
+//MUSIQUE
+const audio = document.getElementById('matrixaudio');
+const AudioBtn = document.querySelector('.audio-control');
+let musicOn = false;
+
+function toggleMusic() {
+    if (musicON) {
+        audio.pause();
+        audioBtn.textContent ='🔊 MUSIQUE: OFF' ;
+    } else {
+        audio.play();
+        audioBtn.textContent = '🔇 MUSIQUE: on';
+    }
+    musicON =!musicOn;
+}
+
+// CONTROLES CLAVIER
+
+document.addEventListener('Keydown' , (e) => {
+    if(e.code === 'Space') {
+        isRunning =!isRunning;
+        if(isRunning) animate();
+    }
+});
+
+//Demarrer la musique au premier clic n'importe où
+document.addEventListener('click' , () => {
+    if(!musicOn) toogleMusic();
+}, { once: true});
+
+//Resize
+window.addEventListener('resize' , () => {
+    convas.width = window.innerWidth;
+    convas.height = window.innerHieght;
+});
+</script>
 </body>
 </html>
