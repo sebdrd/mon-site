@@ -78,4 +78,28 @@
             drops[i]++;
         }
     }
-function animate
+function animate() {
+    if (isRunning) {
+        draw();
+        animationId = requestAnimationFrame(animate);
+
+    }
+}
+animate();
+
+//pause avec espace
+document.addEventListener('Keydown' , (e) => {
+    if(e.code === 'Space') {
+        isRunning =!isRunning;
+        if(isRunning) animate();
+    }
+})
+
+//Resize
+window.addEventListener('resize' , () => {
+    convas.width = window.innerWidth;
+    convas.height = window.innerHieght;
+});
+</script>
+</body>
+</html>
