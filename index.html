@@ -1,125 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <meta charset="utf-8">
-    <title>Thomson NEO17 - Wagner Techno</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATRIX_TERMINAL.exe</title>
     <style>
-        body { margin: 0; background: #000; color: #0F0; font-family: 'Courier New', monospace; text-align: center; overflow: hidden; }
-        #matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-.content { position: relative; z-index: 1; padding-top: 100px; text-shadow: 0 0 15px #0F0; }
-        h1 { font-size: 50px; position: relative; }
-        h1::before, h1::after { content: "je suis un dieu!"; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        h1::before { left: 2px; text-shadow: -2px 0 #ff00ff; animation: glitch-anim 3s infinite linear alternate-reverse; }
-        h1::after { left: -2px; text-shadow: -2px 0 #00ffff; animation: glitch-anim2 2s infinite linear alternate-reverse; }
-        @keyframes glitch-anim { 0% { clip: rect(42px,9999px,44px,0) } 100% { clip: rect(16px,9999px,91px,0) } }
-        @keyframes glitch-anim2 { 0% { clip: rect(65px,9999px,100px,0) } 100% { clip: rect(86px,9999px,30px,0) } }
-        p { font-size: 20px; }
-.hint { position: fixed; bottom: 20px; width: 100%; font-size: 14px; color: #58a6ff; }
-.audio-player { position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.7); border: 1px solid #0F0; color: #0F0; padding: 12px 18px; font-family: monospace; z-index: 10; box-shadow: 0 0 20px rgba(0,255,0,0.3); cursor: pointer; min-width: 220px; text-align: left; }
-.audio-title { font-size: 12px; margin-bottom: 5px; opacity: 0.8; }
-.audio-status { font-size: 14px; font-weight: bold; }
-.progress-bar { width: 100%; height: 3px; background: rgba(0,255,0,0.2); margin-top: 8px; position: relative; }
-.progress { height: 100%; background: #0F0; width: 0%; box-shadow: 0 0 10px #0F0; transition: width 0.1s linear; }
-.counter { position: fixed; top: 20px; left: 20px; background: rgba(0,0,0,0.7); border: 1px solid #0F0; color: #0F0; padding: 12px 18px; font-family: monospace; font-size: 14px; z-index: 10; box-shadow: 0 0 20px rgba(0,255,0,0.3); }
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #000;
+            color: #00ff00;
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            overflow: hidden;
+        }
+        #matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+       .terminal {
+            position: relative; z-index: 10; padding: 40px; height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-shadow: 0 0 10px #00ff00;
+        }
+       .title { font-size: 48px; margin-bottom: 30px; animation: glitch 2s infinite; }
+        @keyframes glitch {
+            0%, 100% { text-shadow: 0 0 10px #00ff00; }
+            50% { text-shadow: -2px 0 #ff0000, 2px 0 #0000ff, 0 0 10px #00ff00; }
+        }
+       .button {
+            background: #000; border: 2px solid #00ff00; color: #00ff00;
+            padding: 15px 30px; font-family: 'VT323', monospace; font-size: 24px;
+            cursor: pointer; margin: 10px; text-transform: uppercase;
+            box-shadow: 0 0 20px #00ff00; transition: all 0.1s;
+        }
+       .button:hover { background: #00ff00; color: #000; box-shadow: 0 0 40px #00ff00; }
+       .button:active { transform: scale(0.95); }
+       .status { margin-top: 30px; font-size: 24px; height: 30px; }
+       .timer { margin-top: 10px; font-size: 20px; opacity: 0.8; }
+       .scanlines {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 5;
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
+        }
     </style>
 </head>
 <body>
     <canvas id="matrix"></canvas>
-    <div class="counter" id="visitorCount">👁️ CHARGEMENT...</div>
-    <div class="audio-player" id="audioBtn">
-        <div class="audio-title">WAGNER_TECHNO.EXE</div>
-        <div class="audio-status">► CLIQUE POUR LANCER</div>
-        <div class="progress-bar"><div class="progress" id="progress"></div></div>
+    <div class="scanlines"></div>
+
+    <div class="terminal">
+        <div class="title">MATRIX_TERMINAL.EXE</div>
+        <button class="button" id="playBtn">► WAGNER_TECHNO.EXE</button>
+        <div class="status" id="status">SYSTEM READY</div>
+        <div class="timer" id="timer">0:00 / 0:00</div>
     </div>
-    <div class="content">
-        <h1>je suis un dieu!</h1>
-        <p>Mon premier site codé sur un Celeron N4020</p>
-        <p>8Go de RAM + SSD + VS Code = je peux tout faire</p>
-        <p>Chevauchée des Walkyries - Techno Edit</p>
-    </div>
-    <div class="hint">ESPACE = pluie on/off | M = musique on/off</div>
 
     <audio id="matrixAudio" loop preload="auto">
-        <source src="./techno.mp3" type="audio/mpeg">
+        <source src="./watermello-sport-techno.mp3.mp3" type="audio/mpeg">
     </audio>
 
     <script>
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ';
-        const fontSize = 14; const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
-        let isRunning = true;
-        function draw() {
-            ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = '#0F0'; ctx.font = fontSize + 'px monospace';
-            for(let i = 0; i < drops.length; i++) {
-                const text = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const rainDrops = [];
+        for(let x = 0; x < columns; x++) { rainDrops[x] = 1; }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00ff00';
+            ctx.font = fontSize + 'px VT323';
+            for(let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                if(rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
             }
         }
-        function animate() { if(isRunning) { draw(); requestAnimationFrame(animate); } }
-        animate();
+        setInterval(drawMatrix, 35);
 
         const audio = document.getElementById('matrixAudio');
-        const audioBtn = document.getElementById('audioBtn');
-        const audioStatus = audioBtn.querySelector('.audio-status');
-        const progress = document.getElementById('progress');
-        let musicOn = false;
-        audio.volume = 0.7;
+        const playBtn = document.getElementById('playBtn');
+        const status = document.getElementById('status');
+        const timer = document.getElementById('timer');
+        audio.volume = 1.0;
 
-        audio.addEventListener('canplay', () => { audioStatus.textContent = '► PRET - CLIQUE POUR LANCER'; });
-        audio.addEventListener('error', () => { audioStatus.textContent = '⚠ FICHIER MANQUANT'; });
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    playBtn.textContent = '■ STOP_TECHNO.EXE';
+                    status.textContent = '► WATERMELLO TECHNO EN COURS...';
+                }).catch(e => {
+                    status.textContent = 'ERREUR: AUTORISEZ LE SON';
+                    console.error(e);
+                });
+            } else {
+                audio.pause();
+                playBtn.textContent = '► WAGNER_TECHNO.EXE';
+                status.textContent = 'SYSTEM PAUSED';
+            }
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const cur = formatTime(audio.currentTime);
+            const dur = formatTime(audio.duration);
+            timer.textContent = `${cur} / ${dur}`;
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            status.textContent = 'AUDIO WATERMELLO CHARGE - READY';
+        });
+
+        audio.addEventListener('error', () => {
+            status.textContent = 'ERREUR: FICHIER MP3 INTROUVABLE';
+        });
 
         function formatTime(seconds) {
             if (isNaN(seconds)) return '0:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min}:${sec.toString().padStart(2, '0')}`;
         }
 
-        function updateProgress() {
-            if (audio.duration) {
-                const percent = (audio.currentTime / audio.duration) * 100;
-                progress.style.width = percent + '%';
-                audioStatus.textContent = `► ${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
-            }
-        }
-
-        audioBtn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            try {
-                if (musicOn) {
-                    audio.pause();
-                    audioStatus.textContent = '■ PAUSE';
-                    musicOn = false;
-                } else {
-                    await audio.play();
-                    audioStatus.textContent = '► LECTURE';
-                    musicOn = true;
-                }
-            } catch (err) {
-                audioStatus.textContent = '⚠ CLIQUE SUR LA PAGE DABORD';
-            }
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         });
-
-        audio.addEventListener('timeupdate', updateProgress);
-
-        fetch('https://api.countapi.xyz/hit/sebdrd-matrix/visits')
-  .then(res => res.json()).then(res => {
-            document.getElementById('visitorCount').textContent = `👁️ VISITEURS: ${res.value}`;
-        }).catch(() => {
-            document.getElementById('visitorCount').textContent = '👁️ VISITEURS: ∞';
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if(e.code === 'Space') { isRunning =!isRunning; if(isRunning) animate(); e.preventDefault(); }
-            if(e.code === 'KeyM') audioBtn.click();
-        });
-        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
     </script>
 </body>
 </html>
+
