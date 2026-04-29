@@ -16,7 +16,7 @@
         }
         #matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 
-     .terminal {
+    .terminal {
             position: relative;
             z-index: 10;
             width: 100vw;
@@ -24,17 +24,21 @@
             text-shadow: 0 0 10px #00ff00;
         }
 
-     .header-top {
+    .header-top {
             position: absolute;
-            top: 40px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
+            white-space: pre;
+            font-size: 18px;
+            line-height: 1.2;
         }
 
-     .title {
+    .title {
             font-size: 48px;
             animation: glitch 2s infinite;
+            margin-top: 10px;
         }
 
       @keyframes glitch {
@@ -42,37 +46,67 @@
             50% { text-shadow: -2px 0 #ff0000, 2px 0 #0000ff, 0 0 10px #00ff00; }
         }
 
-     .player {
+    .player {
             position: absolute;
             bottom: 40px;
             right: 40px;
             text-align: right;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
             padding: 20px;
             border: 2px solid #00ff00;
             box-shadow: 0 0 20px #00ff00;
+            width: 320px;
         }
 
-     .button {
+    .button {
             background: #000;
             border: 2px solid #00ff00;
             color: #00ff00;
-            padding: 15px 30px;
+            padding: 12px 20px;
             font-family: 'VT323', monospace;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
-            margin: 10px 0;
+            margin: 5px 0;
             text-transform: uppercase;
             box-shadow: 0 0 20px #00ff00;
             transition: all 0.1s;
             width: 100%;
         }
-     .button:hover { background: #00ff00; color: #000; box-shadow: 0 0 40px #00ff00; }
-     .button:active { transform: scale(0.95); }
-     .status { margin-top: 15px; font-size: 20px; height: 25px; }
-     .timer { margin-top: 5px; font-size: 18px; opacity: 0.8; }
+    .button:hover { background: #00ff00; color: #000; box-shadow: 0 0 40px #00ff00; }
+    .button:active { transform: scale(0.95); }
 
-     .scanlines {
+    .playlist-btn {
+            font-size: 16px;
+            padding: 8px 15px;
+            margin: 3px 0;
+      }
+    .playlist-btn.active {
+            background: #00ff00;
+            color: #000;
+      }
+
+    .status { margin-top: 15px; font-size: 18px; height: 22px; }
+    .timer { margin-top: 5px; font-size: 16px; opacity: 0.8; }
+    .track-info { margin-top: 8px; font-size: 16px; color: #00ff00; opacity: 0.9; }
+
+    .visualizer {
+            width: 100%;
+            height: 60px;
+            margin: 10px 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 2px;
+      }
+    .bar {
+            background: #00ff00;
+            width: 8px;
+            height: 2px;
+            box-shadow: 0 0 5px #00ff00;
+            transition: height 0.05s;
+      }
+
+    .scanlines {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 5;
             pointer-events: none;
             background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
@@ -85,21 +119,31 @@
 
     <div class="terminal">
         <div class="header-top">
+╔══════════════════════════════════════════════════╗
+║ SEBAS_DRD // THOMSON NEO17 // MATRIX v2.0 ║
+║ >> WATERMELLO TECHNO SYSTEM LOADED << ║
+╚══════════════════════════════════════════════════╝
             <div class="title">MATRIX_TERMINAL.EXE</div>
         </div>
 
         <div class="player">
-            <button class="button" id="playBtn">► WAGNER_TECHNO.EXE</button>
+            <button class="button" id="playBtn">► START_TECHNO.EXE</button>
+            <button class="button playlist-btn" data-track="0">01. WATERMELLO SPORT</button>
+            <button class="button playlist-btn" data-track="1">02. NEON_PULSE.EXE</button>
+            <button class="button playlist-btn" data-track="2">03. CYBER_WAGNER.EXE</button>
+
+            <div class="visualizer" id="visualizer"></div>
+
+            <div class="track-info" id="trackInfo">TRACK: --</div>
             <div class="status" id="status">SYSTEM READY</div>
             <div class="timer" id="timer">0:00 / 0:00</div>
         </div>
     </div>
 
-    <audio id="matrixAudio" loop preload="auto">
-        <source src="./watermello-sport-techno.mp3.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="matrixAudio" loop preload="auto" crossorigin="anonymous"></audio>
 
     <script>
+        // Matrix rain
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -129,25 +173,90 @@
         }
         setInterval(drawMatrix, 35);
 
+        // Player + Playlist + Visualizer
         const audio = document.getElementById('matrixAudio');
         const playBtn = document.getElementById('playBtn');
         const status = document.getElementById('status');
         const timer = document.getElementById('timer');
+        const trackInfo = document.getElementById('trackInfo');
+        const playlistBtns = document.querySelectorAll('.playlist-btn');
+        const visualizer = document.getElementById('visualizer');
+
+        // PLAYLIST ADAPTÉE.MP3.MP3
+        const playlist = [
+            { name: 'WATERMELLO SPORT', file: './watermello-sport-techno.mp3.mp3' },
+            { name: 'NEON_PULSE.EXE', file: './neon-pulse.mp3.mp3' }, // Upload avec.mp3.mp3
+            { name: 'CYBER_WAGNER.EXE', file: './cyber-wagner.mp3.mp3' } // Upload avec.mp3.mp3
+        ];
+
+        let currentTrack = 0;
         audio.volume = 1.0;
 
-        playBtn.addEventListener('click', () => {
+        // Visualizer setup
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const analyser = audioContext.createAnalyser();
+        const source = audioContext.createMediaElementSource(audio);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+        analyser.fftSize = 64;
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+
+        // Create visualizer bars
+        for(let i = 0; i < 32; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            visualizer.appendChild(bar);
+        }
+        const bars = document.querySelectorAll('.bar');
+
+        function updateVisualizer() {
+            requestAnimationFrame(updateVisualizer);
+            analyser.getByteFrequencyData(dataArray);
+            for(let i = 0; i < 32; i++) {
+                const height = (dataArray[i] / 255) * 60;
+                bars[i].style.height = Math.max(2, height) + 'px';
+            }
+        }
+
+        function loadTrack(index) {
+            currentTrack = index;
+            audio.src = playlist[index].file;
+            trackInfo.textContent = `TRACK: ${playlist[index].name}`;
+            playlistBtns.forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+        }
+
+        function playPause() {
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
             if (audio.paused) {
                 audio.play().then(() => {
                     playBtn.textContent = '■ STOP_TECHNO.EXE';
-                    status.textContent = '► WATERMELLO TECHNO EN COURS...';
+                    status.textContent = '► PLAYING...';
+                    updateVisualizer();
                 }).catch(e => {
                     status.textContent = 'ERREUR: AUTORISEZ LE SON';
                 });
             } else {
                 audio.pause();
-                playBtn.textContent = '► WAGNER_TECHNO.EXE';
+                playBtn.textContent = '► START_TECHNO.EXE';
                 status.textContent = 'SYSTEM PAUSED';
             }
+        }
+
+        playBtn.addEventListener('click', playPause);
+
+        playlistBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const trackIndex = parseInt(btn.dataset.track);
+                loadTrack(trackIndex);
+                if (!audio.paused) {
+                    audio.play();
+                }
+            });
         });
 
         audio.addEventListener('timeupdate', () => {
@@ -157,11 +266,17 @@
         });
 
         audio.addEventListener('loadedmetadata', () => {
-            status.textContent = 'AUDIO WATERMELLO CHARGE - READY';
+            status.textContent = 'TRACK LOADED - READY';
         });
 
         audio.addEventListener('error', () => {
-            status.textContent = 'ERREUR: FICHIER MP3 INTROUVABLE';
+            status.textContent = 'ERREUR: FICHIER.MP3.MP3 INTROUVABLE';
+        });
+
+        audio.addEventListener('ended', () => {
+            let next = (currentTrack + 1) % playlist.length;
+            loadTrack(next);
+            audio.play();
         });
 
         function formatTime(seconds) {
@@ -170,6 +285,9 @@
             const sec = Math.floor(seconds % 60);
             return `${min}:${sec.toString().padStart(2, '0')}`;
         }
+
+        // Init
+        loadTrack(0);
 
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
