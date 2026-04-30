@@ -292,6 +292,103 @@
                 inset 0 3px 6px rgba(0,0,0,0.4);
         }
 
+        /* TRACK BUTTON FULL WIDTH STYLE PIONEER */
+.track-button-full {
+            width: 100%;
+            text-align: left;
+            padding: 16px 15px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            background: linear-gradient(180deg, #1a2a1a 0%, #0a1a0a 100%);
+            border: 2px solid #00ff41;
+            box-shadow:
+                0 0 15px rgba(0,255,65,0.4),
+                inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+.track-button-full:active {
+            background: linear-gradient(180deg, #00aa00 0%, #006600 100%);
+            color: #000;
+            text-shadow: none;
+        }
+
+        /* DROPDOWN MENU FULL WIDTH LISIBLE */
+.dropdown-container {
+            position: relative;
+            width: 100%;
+        }
+
+.dropdown-menu {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, #1a2a1a 0%, #0a1a0a 100%);
+            border: 2px solid #00ff41;
+            border-radius: 4px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            z-index: 100;
+            box-shadow:
+                0 -5px 25px rgba(0,255,65,0.5),
+                inset 0 0 20px rgba(0,0,0,0.8);
+            margin-bottom: 8px;
+        }
+
+.dropdown-menu.open {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+.dropdown-menu::-webkit-scrollbar {
+            width: 8px;
+        }
+.dropdown-menu::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-left: 1px solid #00ff41;
+        }
+.dropdown-menu::-webkit-scrollbar-thumb {
+            background: #00ff41;
+            border-radius: 4px;
+            box-shadow: 0 0 8px #00ff41;
+        }
+
+.dropdown-item {
+            padding: 14px 15px;
+            border-bottom: 1px solid #1a3a1a;
+            cursor: pointer;
+            font-size: 13px;
+            color: #00ff41;
+            text-shadow: 0 0 5px #00ff41;
+            transition: all 0.1s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            letter-spacing: 1px;
+        }
+
+.dropdown-item:hover {
+            background: rgba(0,255,65,0.15);
+            padding-left: 20px;
+            text-shadow: 0 0 10px #00ff41;
+        }
+
+.dropdown-item.active {
+            background: linear-gradient(90deg, #00aa00 0%, #006600 100%);
+            color: #000;
+            text-shadow: none;
+            font-weight: 700;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.4);
+        }
+
+.dropdown-item-number {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-right: 10px;
+            font-weight: 900;
+        }
+
         /* VOLUME KNOB STYLE */
 .volume-section {
             display: flex;
@@ -336,80 +433,6 @@
             text-shadow: 0 0 5px #00ff41;
             font-weight: 700;
             min-width: 45px;
-        }
-
-        /* MENU DÉROULANT TRACK */
-.dropdown-container {
-            position: relative;
-        }
-
-.dropdown-menu {
-            position: absolute;
-            bottom: 100%;
-            left: 0;
-            right: 0;
-            background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
-            border: 2px solid #444;
-            border-radius: 4px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            z-index: 100;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
-            margin-bottom: 5px;
-        }
-
-.dropdown-menu.open {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-.dropdown-menu::-webkit-scrollbar {
-            width: 6px;
-        }
-.dropdown-menu::-webkit-scrollbar-track {
-            background: #0a0a0a;
-        }
-.dropdown-menu::-webkit-scrollbar-thumb {
-            background: #00ff41;
-            border-radius: 3px;
-        }
-
-.dropdown-item {
-            padding: 12px;
-            border-bottom: 1px solid #333;
-            cursor: pointer;
-            font-size: 12px;
-            color: #00ff41;
-            text-shadow: 0 0 3px #00ff41;
-            transition: all 0.1s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-.dropdown-item:hover {
-            background: rgba(0,255,65,0.1);
-        }
-
-.dropdown-item.active {
-            background: linear-gradient(180deg, #00aa00 0%, #006600 100%);
-            color: #000;
-            text-shadow: none;
-            font-weight: 700;
-        }
-
-.delete-track {
-            background: linear-gradient(180deg, #aa0000 0%, #660000 100%);
-            border: 1px solid #444;
-            border-radius: 3px;
-            color: #fff;
-            padding: 4px 8px;
-            font-size: 10px;
-            cursor: pointer;
-        }
-.delete-track:active {
-            background: linear-gradient(180deg, #660000 0%, #440000 100%);
         }
 
         /* BIBLIOTHÈQUE */
@@ -459,6 +482,19 @@
             font-weight: 700;
         }
 
+.delete-track {
+            background: linear-gradient(180deg, #aa0000 0%, #660000 100%);
+            border: 1px solid #444;
+            border-radius: 3px;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+.delete-track:active {
+            background: linear-gradient(180deg, #660000 0%, #440000 100%);
+        }
+
 #fileInput { display: none; }
 
 .scanlines {
@@ -469,15 +505,15 @@
 
         /* MOBILE */
         @media (max-width: 768px) {
-  .ghost-container {
+.ghost-container {
               top: 30%;
               left: 50%;
               width: 85vw;
               max-width: 400px;
           }
-  .ghost-container { opacity: 0.3!important; }
+.ghost-container { opacity: 0.3!important; }
 
-  .car-stereo {
+.car-stereo {
               bottom: 10px;
               left: 50%;
               right: auto;
@@ -486,15 +522,15 @@
               padding: 12px;
               max-height: 60vh;
           }
-  .title-top { font-size: 28px; top: 10px; letter-spacing: 4px; }
-  .footer-sig { font-size: 9px; bottom: 5px; left: 5px; }
-  .lcd-text { font-size: 12px; }
-  .track-display { font-size: 15px; }
-  .timer-display { font-size: 20px; }
-  .car-button { padding: 12px 8px; font-size: 11px; }
-  .play-button { width: 50px; height: 50px; font-size: 20px; }
-  .eq-visualizer { height: 35px; }
-  .eq-bar { width: 10px; }
+.title-top { font-size: 28px; top: 10px; letter-spacing: 4px; }
+.footer-sig { font-size: 9px; bottom: 5px; left: 5px; }
+.lcd-text { font-size: 12px; }
+.track-display { font-size: 15px; }
+.timer-display { font-size: 20px; }
+.car-button { padding: 12px 8px; font-size: 11px; }
+.play-button { width: 50px; height: 50px; font-size: 20px; }
+.eq-visualizer { height: 35px; }
+.eq-bar { width: 10px; }
         }
     </style>
 </head>
@@ -525,12 +561,16 @@
             <!-- BOUTONS PRINCIPAUX -->
             <div class="button-row">
                 <button class="car-button big play-button" id="playBtn">▶</button>
-                <div class="dropdown-container">
-                    <button class="car-button" id="trackBtn">TRACK</button>
-                    <div class="dropdown-menu" id="trackDropdown"></div>
-                </div>
                 <button class="car-button" id="loopBtn">LOOP</button>
                 <button class="car-button" id="shuffleBtn">RND</button>
+            </div>
+
+            <!-- LIGNE TRACK DÉDIÉE -->
+            <div class="button-row">
+                <div class="dropdown-container">
+                    <button class="car-button track-button-full" id="trackBtn">TRACK: SELECT</button>
+                    <div class="dropdown-menu" id="trackDropdown"></div>
+                </div>
             </div>
 
             <!-- VOLUME -->
@@ -683,13 +723,17 @@
             renderLibraryList();
             if (playlist.length > 0) {
                 loadTrack(0);
+            } else {
+                trackBtn.textContent = 'TRACK: EMPTY';
+                trackInfo.textContent = 'TRACK: --';
             }
         }
 
         function renderTrackDropdown() {
             trackDropdown.innerHTML = '';
             if (playlist.length === 0) {
-                trackDropdown.innerHTML = '<div class="dropdown-item">NO TRACKS</div>';
+                trackDropdown.innerHTML = '<div class="dropdown-item">NO TRACKS IN LIBRARY</div>';
+                trackBtn.textContent = 'TRACK: EMPTY';
                 return;
             }
             playlist.forEach((track, index) => {
@@ -697,7 +741,7 @@
                 item.className = 'dropdown-item';
                 if (index === currentTrack) item.classList.add('active');
                 item.innerHTML = `
-                    <span>${String(index+1).padStart(2,'0')}. ${track.name}</span>
+                    <span><span class="dropdown-item-number">${String(index+1).padStart(2,'0')}</span>${track.name}</span>
                 `;
                 item.onclick = () => {
                     loadTrack(index);
@@ -773,6 +817,7 @@
             const url = URL.createObjectURL(track.blob);
             audio.src = url;
             trackInfo.textContent = `${String(index+1).padStart(2,'0')}. ${track.name}`;
+            trackBtn.textContent = `TRACK: ${String(index+1).padStart(2,'0')}. ${track.name}`;
             renderTrackDropdown();
             status.textContent = `READY`;
         }
@@ -901,7 +946,8 @@
 
         window.addEventListener('resize', () => {
             resizeCanvas();
-            columns = Math.floor(canvas.width / fontSize);
+            columns = Math.floor(canvas.width / font
+
             rainDrops = [];
             for(let x = 0; x < columns; x++) { rainDrops[x] = 1; }
         });
