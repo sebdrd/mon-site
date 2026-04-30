@@ -23,28 +23,30 @@
             height: 100vh;
         }
 
-.header-top {
+.title-top {
             position: absolute;
-            top: 20px;
+            top: 30px;
             left: 50%;
             transform: translateX(-50%);
+            font-size: 64px;
             text-align: center;
-            white-space: pre;
-            font-size: 18px;
-            line-height: 1.2;
-            text-shadow: 0 0 10px #00ff00;
-        }
-
-.title {
-            font-size: 48px;
+            text-shadow: 0 0 20px #00ff00;
             animation: glitch 2s infinite;
-            margin-top: 10px;
-            text-shadow: 0 0 10px #00ff00;
+            letter-spacing: 4px;
         }
 
       @keyframes glitch {
-            0%, 100% { text-shadow: 0 0 10px #00ff00; }
-            50% { text-shadow: -2px 0 #ff0000, 2px 0 #0000ff, 0 0 10px #00ff00; }
+            0%, 100% { text-shadow: 0 0 20px #00ff00; }
+            50% { text-shadow: -3px 0 #ff0000, 3px 0 #0000ff, 0 0 20px #00ff00; }
+        }
+
+.footer-sig {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 14px;
+            opacity: 0.6;
+            text-shadow: 0 0 5px #00ff00;
         }
 
 .player {
@@ -217,13 +219,8 @@
     <div class="scanlines"></div>
 
     <div class="terminal">
-        <div class="header-top">
-╔══════════════════════════════════════════════════╗
-║ SEBAS_DRD // THOMSON NEO17 // MATRIX v8.2 ║
-║ >> STABLE - NO FLICKER << ║
-╚══════════════════════════════════════════════════╝
-            <div class="title">MATRIX LIBRARY PRO</div>
-        </div>
+        <div class="title-top">MATRIX LIBRARY PRO</div>
+        <div class="footer-sig">SEBDRD / MATRIX</div>
 
         <div class="player">
             <button class="button" id="playBtn">► START TECHNO</button>
