@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATRIX_LIBRARY</title>
+    <title>MATRIX_LIBRARY_PRO</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,11 +51,13 @@
             bottom: 40px;
             right: 40px;
             text-align: right;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             padding: 20px;
             border: 2px solid #00ff00;
             box-shadow: 0 0 20px #00ff00;
-            width: 420px;
+            width: 460px;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
 .button {
@@ -74,11 +76,29 @@
         }
 .button:hover { background: #00ff00; color: #000; box-shadow: 0 0 40px #00ff00; }
 .button:active { transform: scale(0.95); }
+.button.small { font-size: 16px; padding: 8px 12px; width: auto; }
+
+.controls {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+      }
+.controls.button { flex: 1; }
+.controls.button.active { background: #00ff00; color: #000; }
 
 .track-row {
             display: flex;
             gap: 5px;
             margin: 3px 0;
+            align-items: center;
+      }
+
+.cover {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #00ff00;
+            object-fit: cover;
+            box-shadow: 0 0 10px #00ff00;
       }
 
 .playlist-btn {
@@ -107,6 +127,31 @@
             color: #000;
       }
 
+.volume-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+      }
+
+#volume {
+            flex: 1;
+            height: 8px;
+            background: #000;
+            border: 1px solid #00ff00;
+            outline: none;
+            -webkit-appearance: none;
+      }
+#volume::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #00ff00;
+            cursor: pointer;
+            box-shadow: 0 0 10px #00ff00;
+      }
+
 .status { margin-top: 15px; font-size: 18px; height: 22px; }
 .timer { margin-top: 5px; font-size: 16px; opacity: 0.8; }
 .track-info { margin-top: 8px; font-size: 16px; color: #00ff00; opacity: 0.9; }
@@ -128,6 +173,23 @@
             transition: height 0.05s;
       }
 
+.upload-zone {
+            border: 2px dashed #00ff00;
+            padding: 15px;
+            margin: 10px 0;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+      }
+.upload-zone:hover {
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 20px #00ff00;
+      }
+.upload-zone.dragover {
+            background: rgba(0, 255, 0, 0.2);
+      }
+#fileInput { display: none; }
+
 .scanlines {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 5;
             pointer-events: none;
@@ -142,26 +204,31 @@
     <div class="terminal">
         <div class="header-top">
 ╔══════════════════════════════════════════════════╗
-║ SEBAS_DRD // THOMSON NEO17 // MATRIX v7.0 ║
-║ >> LIBRARY SYSTEM ONLINE << ║
+║ SEBAS_DRD // THOMSON NEO17 // MATRIX v8.0 PRO ║
+║ >> LOOP // SHUFFLE // VOLUME // UPLOAD << ║
 ╚══════════════════════════════════════════════════╝
-            <div class="title">MATRIX LIBRARY</div>
+            <div class="title">MATRIX LIBRARY PRO</div>
         </div>
 
         <div class="player">
             <button class="button" id="playBtn">► START TECHNO</button>
 
-            <div class="track-row">
-                <button class="button playlist-btn" data-track="0">01. ROCKOT</button>
-                <button class="download-btn" data-file="rockot.mp3">↓</button>
+            <div class="controls">
+                <button class="button small" id="loopBtn">LOOP: OFF</button>
+                <button class="button small" id="shuffleBtn">SHUFFLE: OFF</button>
             </div>
-            <div class="track-row">
-                <button class="button playlist-btn" data-track="1">02. SIGMA MUSICART</button>
-                <button class="download-btn" data-file="sigmamusicart.mp3">↓</button>
+
+            <div class="volume-row">
+                <span>VOL:</span>
+                <input type="range" id="volume" min="0" max="100" value="100">
+                <span id="volDisplay">100%</span>
             </div>
-            <div class="track-row">
-                <button class="button playlist-btn" data-track="2">03. WATERMELLO</button>
-                <button class="download-btn" data-file="watermello.mp3">↓</button>
+
+            <div id="playlist"></div>
+
+            <div class="upload-zone" id="uploadZone">
+                [+] DROP MP3 HERE OR CLICK TO ADD
+                <input type="file" id="fileInput" accept="audio/mpeg" multiple>
             </div>
 
             <div class="visualizer" id="visualizer"></div>
@@ -205,24 +272,30 @@
         }
         setInterval(drawMatrix, 35);
 
-        // Player + Playlist + Visualizer + Download
+        // Player
         const audio = document.getElementById('matrixAudio');
         const playBtn = document.getElementById('playBtn');
         const status = document.getElementById('status');
         const timer = document.getElementById('timer');
         const trackInfo = document.getElementById('trackInfo');
-        const playlistBtns = document.querySelectorAll('.playlist-btn');
-        const downloadBtns = document.querySelectorAll('.download-btn');
         const visualizer = document.getElementById('visualizer');
+        const volumeSlider = document.getElementById('volume');
+        const volDisplay = document.getElementById('volDisplay');
+        const loopBtn = document.getElementById('loopBtn');
+        const shuffleBtn = document.getElementById('shuffleBtn');
+        const playlistDiv = document.getElementById('playlist');
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
 
-        // PLAYLIST AVEC TES VRAIS FICHIERS GITHUB
-        const playlist = [
-            { name: 'ROCKOT', file: 'rockot.mp3' },
-            { name: 'SIGMA MUSICART', file: 'sigmamusicart.mp3' },
-            { name: 'WATERMELLO', file: 'watermello.mp3' }
+        let playlist = [
+            { name: 'ROCKOT', file: 'rockot.mp3', cover: 'https://placehold.co/40x40/00ff00/000?text=R' },
+            { name: 'SIGMA MUSICART', file: 'sigmamusicart.mp3', cover: 'https://placehold.co/40x40/00ff00/000?text=S' },
+            { name: 'WATERMELLO', file: 'watermello.mp3', cover: 'https://placehold.co/40x40/00ff00/000?text=W' }
         ];
 
         let currentTrack = 0;
+        let isLoop = false;
+        let isShuffle = false;
         audio.volume = 1.0;
         let audioContext;
         let analyser;
@@ -236,6 +309,42 @@
             visualizer.appendChild(bar);
         }
         bars = document.querySelectorAll('.bar');
+
+        function renderPlaylist() {
+            playlistDiv.innerHTML = '';
+            playlist.forEach((track, index) => {
+                const row = document.createElement('div');
+                row.className = 'track-row';
+                row.innerHTML = `
+                    <img src="${track.cover}" class="cover" onerror="this.src='https://placehold.co/40x40/00ff00/000?text=?'">
+                    <button class="button playlist-btn" data-track="${index}">${String(index+1).padStart(2,'0')}. ${track.name}</button>
+                    <button class="download-btn" data-file="${track.file}">↓</button>
+                `;
+                playlistDiv.appendChild(row);
+            });
+            attachPlaylistEvents();
+        }
+
+        function attachPlaylistEvents() {
+            document.querySelectorAll('.playlist-btn').forEach((btn, index) => {
+                btn.onclick = () => {
+                    loadTrack(index);
+                    if (!audio.paused) audio.play();
+                };
+            });
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    const file = btn.getAttribute('data-file');
+                    const link = document.createElement('a');
+                    link.href = file;
+                    link.download = file;
+                    link.click();
+                    status.textContent = `DOWNLOADING: ${file}`;
+                    setTimeout(() => status.textContent = 'READY', 2000);
+                };
+            });
+        }
 
         function initAudioContext() {
             if (!audioContext) {
@@ -264,7 +373,7 @@
             currentTrack = index;
             audio.src = playlist[index].file;
             trackInfo.textContent = `TRACK: ${playlist[index].name}`;
-            playlistBtns.forEach((btn, i) => {
+            document.querySelectorAll('.playlist-btn').forEach((btn, i) => {
                 btn.classList.toggle('active', i === index);
             });
             status.textContent = `READY: ${playlist[index].file}`;
@@ -272,9 +381,7 @@
 
         function playPause() {
             initAudioContext();
-            if (audioContext.state === 'suspended') {
-                audioContext.resume();
-            }
+            if (audioContext.state === 'suspended') audioContext.resume();
             if (audio.paused) {
                 audio.play().then(() => {
                     playBtn.textContent = '■ STOP TECHNO';
@@ -290,34 +397,73 @@
             }
         }
 
+        function nextTrack() {
+            if (isShuffle) {
+                let next;
+                do { next = Math.floor(Math.random() * playlist.length); }
+                while (next === currentTrack && playlist.length > 1);
+                loadTrack(next);
+            } else {
+                let next = (currentTrack + 1) % playlist.length;
+                loadTrack(next);
+            }
+            audio.play();
+        }
+
         playBtn.addEventListener('click', playPause);
 
-        playlistBtns.forEach((btn, index) => {
-            btn.addEventListener('click', () => {
-                loadTrack(index);
-                if (!audio.paused) {
-                    audio.play().catch(e => {
-                        status.textContent = `SWITCH FAIL: CHECK MP3`;
-                    });
-                }
-            });
+        loopBtn.addEventListener('click', () => {
+            isLoop =!isLoop;
+            audio.loop = isLoop;
+            loopBtn.textContent = `LOOP: ${isLoop? 'ON' : 'OFF'}`;
+            loopBtn.classList.toggle('active', isLoop);
         });
 
-        // DOWNLOAD SYSTEM
-        downloadBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const file = btn.getAttribute('data-file');
-                const link = document.createElement('a');
-                link.href = file;
-                link.download = file;
-                link.click();
-                status.textContent = `DOWNLOADING: ${file}`;
-                setTimeout(() => {
-                    status.textContent = 'READY';
-                }, 2000);
-            });
+        shuffleBtn.addEventListener('click', () => {
+            isShuffle =!isShuffle;
+            shuffleBtn.textContent = `SHUFFLE: ${isShuffle? 'ON' : 'OFF'}`;
+            shuffleBtn.classList.toggle('active', isShuffle);
         });
+
+        volumeSlider.addEventListener('input', () => {
+            audio.volume = volumeSlider.value / 100;
+            volDisplay.textContent = volumeSlider.value + '%';
+        });
+
+        // Upload system
+        uploadZone.addEventListener('click', () => fileInput.click());
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            for (let file of files) {
+                if (file.type === 'audio/mpeg') {
+                    const url = URL.createObjectURL(file);
+                    const name = file.name.replace('.mp3', '').toUpperCase();
+                    playlist.push({
+                        name: name,
+                        file: url,
+                        cover: `https://placehold.co/40x40/00ff00/000?text=${name[0]}`
+                    });
+                    status.textContent = `ADDED: ${name}`;
+                }
+            }
+            renderPlaylist();
+            setTimeout(() => status.textContent = 'READY', 2000);
+        }
 
         audio.addEventListener('timeupdate', () => {
             const cur = formatTime(audio.currentTime);
@@ -342,9 +488,7 @@
         });
 
         audio.addEventListener('ended', () => {
-            let next = (currentTrack + 1) % playlist.length;
-            loadTrack(next);
-            audio.play();
+            if (!isLoop) nextTrack();
         });
 
         function formatTime(seconds) {
@@ -355,6 +499,7 @@
         }
 
         // Init
+        renderPlaylist();
         loadTrack(0);
 
         window.addEventListener('resize', () => {
