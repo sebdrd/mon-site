@@ -2,44 +2,92 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>MATRIX_LIBRARY_PRO</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             background: #000;
             color: #00ff00;
             font-family: 'VT323', monospace;
             font-size: 20px;
             overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
         #matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 
-   .ghost-rider {
+        /* 1. GHOST RIDER + INTRO ANIMATION */
+  .ghost-container {
             position: fixed;
             top: 50%;
-            left: 30%;
+            left: 50%;
             transform: translate(-50%, -50%);
-            width: 750px;
+            width: 80vw;
+            max-width: 750px;
             height: auto;
             z-index: 3;
-            opacity: 0.25;
-            filter: sepia(1) hue-rotate(75deg) saturate(8) brightness(2.2) contrast(1.5);
-            mix-blend-mode: screen;
-            animation: ghost-pulse 3.5s infinite ease-in-out, ghost-glitch 0.12s infinite;
+            opacity: 0;
+            animation: ghost-intro 3s ease-out 0.5s forwards;
             pointer-events: none;
         }
 
+        @keyframes ghost-intro {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotate(-10deg); filter: blur(20px); }
+            60% { opacity: 0.3; transform: translate(-50%, -50%) scale(1.1) rotate(5deg); filter: blur(5px); }
+            100% { opacity: 0.25; transform: translate(-50%, -50%) scale(1) rotate(0deg); filter: blur(0px); }
+        }
+
+  .ghost-rider {
+            width: 100%;
+            height: auto;
+            filter: sepia(1) hue-rotate(75deg) saturate(8) brightness(2.2) contrast(1.5);
+            mix-blend-mode: screen;
+            animation: ghost-pulse 3.5s infinite ease-in-out, ghost-glitch 0.12s infinite;
+            transition: filter 0.05s;
+        }
+
+        /* 2. FLAMMES ANIMÉES VERTES */
+  .flames {
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120%;
+            height: 140%;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(0,255,0,0.4) 0%, transparent 40%),
+                radial-gradient(ellipse at 30% 10%, rgba(0,255,100,0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 5%, rgba(0,255,50,0.3) 0%, transparent 45%);
+            filter: blur(15px);
+            animation: flame-dance 2s infinite ease-in-out;
+            opacity: 0.6;
+            mix-blend-mode: screen;
+        }
+
+        @keyframes flame-dance {
+            0%, 100% { transform: translateX(-50%) scaleY(1) scaleX(1); }
+            33% { transform: translateX(-52%) scaleY(1.2) scaleX(0.95); }
+            66% { transform: translateX(-48%) scaleY(0.9) scaleX(1.05); }
+        }
+
         @keyframes ghost-pulse {
-            0%, 100% { opacity: 0.18; transform: translate(-50%, -50%) scale(0.98); }
-            50% { opacity: 0.30; transform: translate(-50%, -50%) scale(1.03); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
         }
 
         @keyframes ghost-glitch {
             0%, 100% { filter: sepia(1) hue-rotate(75deg) saturate(8) brightness(2.2) contrast(1.5); }
             25% { filter: sepia(1) hue-rotate(75deg) saturate(9) brightness(2.5) contrast(1.6) drop-shadow(3px 0 #00ff00); }
             75% { filter: sepia(1) hue-rotate(75deg) saturate(8) brightness(2.0) contrast(1.4) drop-shadow(-3px 0 #00ff00); }
+        }
+
+        /* 3. PULSE SUR LES BASS */
+  .ghost-rider.bass-hit {
+            animation: ghost-pulse 0.2s ease-out, ghost-glitch 0.12s infinite!important;
+            filter: sepia(1) hue-rotate(75deg) saturate(12) brightness(4) contrast(2) drop-shadow(0 0 30px #00ff00)!important;
         }
 
 .terminal {
@@ -51,14 +99,15 @@
 
 .title-top {
             position: absolute;
-            top: 30px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 64px;
+            font-size: 48px;
             text-align: center;
             text-shadow: 0 0 20px #00ff00;
             animation: glitch 2s infinite;
             letter-spacing: 4px;
+            padding: 0 10px;
         }
 
       @keyframes glitch {
@@ -68,24 +117,26 @@
 
 .footer-sig {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            font-size: 14px;
+            bottom: 10px;
+            left: 10px;
+            font-size: 12px;
             opacity: 0.6;
             text-shadow: 0 0 5px #00ff00;
         }
 
 .player {
             position: absolute;
-            bottom: 40px;
-            right: 40px;
-            text-align: right;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
             background: rgba(0,0,0,0.95);
-            padding: 20px;
+            padding: 15px;
             border: 2px solid #00ff00;
             box-shadow: 0 0 20px #00ff00;
-            width: 480px;
-            max-height: 90vh;
+            width: 95vw;
+            max-width: 480px;
+            max-height: 70vh;
             overflow-y: auto;
             text-shadow: 0 0 5px #00ff00;
         }
@@ -94,7 +145,7 @@
             background: #000;
             border: 2px solid #00ff00;
             color: #00ff00;
-            padding: 12px 20px;
+            padding: 15px 20px;
             font-family: 'VT323', monospace;
             font-size: 20px;
             cursor: pointer;
@@ -104,10 +155,10 @@
             transition: all 0.1s;
             width: 100%;
             text-shadow: 0 0 5px #00ff00;
+            touch-action: manipulation;
         }
-.button:hover { background: #00ff00; color: #000; box-shadow: 0 0 40px #00ff00; text-shadow: none; }
-.button:active { transform: scale(0.95); }
-.button.small { font-size: 16px; padding: 8px 12px; width: auto; }
+.button:hover,.button:active { background: #00ff00; color: #000; box-shadow: 0 0 40px #00ff00; text-shadow: none; }
+.button.small { font-size: 16px; padding: 12px; width: auto; }
 
 .controls {
             display: flex;
@@ -120,7 +171,7 @@
 .track-row {
             display: flex;
             gap: 5px;
-            margin: 3px 0;
+            margin: 5px 0;
             align-items: center;
       }
 
@@ -139,7 +190,7 @@
 
 .playlist-btn {
             font-size: 16px;
-            padding: 8px 15px;
+            padding: 12px 15px;
             flex: 1;
             text-align: left;
             white-space: nowrap;
@@ -153,8 +204,8 @@
       }
 
 .download-btn {
-            font-size: 16px;
-            padding: 8px 12px;
+            font-size: 18px;
+            padding: 12px;
             width: 50px;
             border: 2px solid #00ff00;
             background: #000;
@@ -164,7 +215,7 @@
             box-shadow: 0 0 20px #00ff00;
             flex-shrink: 0;
       }
-.download-btn:hover {
+.download-btn:hover,.download-btn:active {
             background: #00ff00;
             color: #000;
             text-shadow: none;
@@ -180,7 +231,7 @@
 
 #volume {
             flex: 1;
-            height: 8px;
+            height: 10px;
             background: #000;
             border: 1px solid #00ff00;
             outline: none;
@@ -188,8 +239,8 @@
       }
 #volume::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             background: #00ff00;
             cursor: pointer;
             box-shadow: 0 0 10px #00ff00;
@@ -218,13 +269,14 @@
 
 .upload-zone {
             border: 2px dashed #00ff00;
-            padding: 15px;
+            padding: 20px;
             margin: 10px 0;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 16px;
       }
-.upload-zone:hover {
+.upload-zone:hover,.upload-zone:active {
             background: rgba(0, 255, 0, 0.1);
             box-shadow: 0 0 20px #00ff00;
       }
@@ -238,14 +290,26 @@
             pointer-events: none;
             background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
         }
+
+        /* MOBILE OPTIMISÉ */
+        @media (max-width: 768px) {
+          .title-top { font-size: 36px; top: 15px; }
+          .ghost-container { width: 95vw; left: 50%; }
+          .player { bottom: 10px; padding: 12px; max-height: 65vh; }
+          .button { padding: 18px 20px; font-size: 18px; }
+          .footer-sig { font-size: 10px; bottom: 5px; left: 5px; }
+        }
     </style>
 </head>
 <body>
     <canvas id="matrix"></canvas>
     <div class="scanlines"></div>
 
-    <!-- GHOST RIDER JPEG -->
-    <img src="ghostrider.jpeg" class="ghost-rider" alt="Ghost Rider">
+    <!-- GHOST RIDER + FLAMMES + INTRO -->
+    <div class="ghost-container">
+        <div class="flames"></div>
+        <img src="ghostrider.jpeg" class="ghost-rider" alt="Ghost Rider" id="ghostRider">
+    </div>
 
     <div class="terminal">
         <div class="title-top">MATRIX LIBRARY PRO</div>
@@ -268,7 +332,7 @@
             <div id="playlist"></div>
 
             <div class="upload-zone" id="uploadZone">
-                [+] DROP MP3 HERE OR CLICK TO ADD
+                [+] DROP MP3 HERE OR TAP TO ADD
                 <input type="file" id="fileInput" accept="audio/mpeg" multiple>
             </div>
 
@@ -280,21 +344,24 @@
         </div>
     </div>
 
-    <audio id="matrixAudio" preload="metadata"></audio>
+    <audio id="matrixAudio" preload="metadata" crossorigin="anonymous"></audio>
 
     <script>
         // Matrix rain
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
         const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
         const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const nums = '0123456789';
         const alphabet = katakana + latin + nums;
         const fontSize = 16;
-        const columns = canvas.width / fontSize;
-        const rainDrops = [];
+        let columns = Math.floor(canvas.width / fontSize);
+        let rainDrops = [];
         for(let x = 0; x < columns; x++) { rainDrops[x] = 1; }
 
         function drawMatrix() {
@@ -327,6 +394,7 @@
         const playlistDiv = document.getElementById('playlist');
         const uploadZone = document.getElementById('uploadZone');
         const fileInput = document.getElementById('fileInput');
+        const ghostRider = document.getElementById('ghostRider');
 
         let playlist = [
             { name: 'ROCKOT', file: 'rockot.mp3', cover: 'R' },
@@ -342,6 +410,8 @@
         let analyser;
         let source;
         let bars;
+        let dataArray;
+        let lastBassHit = 0;
 
         // Create visualizer bars
         for(let i = 0; i < 32; i++) {
@@ -394,16 +464,24 @@
                 source = audioContext.createMediaElementSource(audio);
                 source.connect(analyser);
                 analyser.connect(audioContext.destination);
-                analyser.fftSize = 64;
+                analyser.fftSize = 256;
+                dataArray = new Uint8Array(analyser.frequencyBinCount);
             }
         }
 
         function updateVisualizer() {
             if (!analyser) return;
             requestAnimationFrame(updateVisualizer);
-            const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
             analyser.getByteFrequencyData(dataArray);
+
+            // 1. PULSE SUR LES BASS
+            let bass = (dataArray[0] + dataArray[1] + dataArray[2] + dataArray[3]) / 4;
+            if (bass > 200 && Date.now() - lastBassHit > 100) {
+                ghostRider.classList.add('bass-hit');
+                setTimeout(() => ghostRider.classList.remove('bass-hit'), 200);
+                lastBassHit = Date.now();
+            }
+
             for(let i = 0; i < 32; i++) {
                 const height = (dataArray[i] / 255) * 60;
                 bars[i].style.height = Math.max(2, height) + 'px';
@@ -544,8 +622,10 @@
         loadTrack(0);
 
         window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            resizeCanvas();
+            columns = Math.floor(canvas.width / fontSize);
+            rainDrops = [];
+            for(let x = 0; x < columns; x++) { rainDrops[x] = 1; }
         });
     </script>
 </body>
