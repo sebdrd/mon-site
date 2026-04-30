@@ -55,7 +55,7 @@
             padding: 20px;
             border: 2px solid #00ff00;
             box-shadow: 0 0 20px #00ff00;
-            width: 400px;
+            width: 420px;
         }
 
 .button {
@@ -142,8 +142,8 @@
     <div class="terminal">
         <div class="header-top">
 ╔══════════════════════════════════════════════════╗
-║ SEBAS_DRD // THOMSON NEO17 // MATRIX v6.0 ║
-║ >> LIBRARY + DOWNLOAD MODULE << ║
+║ SEBAS_DRD // THOMSON NEO17 // MATRIX v7.0 ║
+║ >> LIBRARY SYSTEM ONLINE << ║
 ╚══════════════════════════════════════════════════╝
             <div class="title">MATRIX LIBRARY</div>
         </div>
@@ -152,16 +152,16 @@
             <button class="button" id="playBtn">► START TECHNO</button>
 
             <div class="track-row">
-                <button class="button playlist-btn" data-track="0">01. TRACK 1</button>
-                <button class="download-btn" data-file="track1.mp3">↓</button>
+                <button class="button playlist-btn" data-track="0">01. ROCKOT</button>
+                <button class="download-btn" data-file="rockot.mp3">↓</button>
             </div>
             <div class="track-row">
-                <button class="button playlist-btn" data-track="1">02. TRACK 2</button>
-                <button class="download-btn" data-file="track2.mp3">↓</button>
+                <button class="button playlist-btn" data-track="1">02. SIGMA MUSICART</button>
+                <button class="download-btn" data-file="sigmamusicart.mp3">↓</button>
             </div>
             <div class="track-row">
-                <button class="button playlist-btn" data-track="2">03. TRACK 3</button>
-                <button class="download-btn" data-file="track3.mp3">↓</button>
+                <button class="button playlist-btn" data-track="2">03. WATERMELLO</button>
+                <button class="download-btn" data-file="watermello.mp3">↓</button>
             </div>
 
             <div class="visualizer" id="visualizer"></div>
@@ -215,10 +215,11 @@
         const downloadBtns = document.querySelectorAll('.download-btn');
         const visualizer = document.getElementById('visualizer');
 
+        // PLAYLIST AVEC TES VRAIS FICHIERS GITHUB
         const playlist = [
-            { name: 'TRACK 1', file: 'track1.mp3' },
-            { name: 'TRACK 2', file: 'track2.mp3' },
-            { name: 'TRACK 3', file: 'track3.mp3' }
+            { name: 'ROCKOT', file: 'rockot.mp3' },
+            { name: 'SIGMA MUSICART', file: 'sigmamusicart.mp3' },
+            { name: 'WATERMELLO', file: 'watermello.mp3' }
         ];
 
         let currentTrack = 0;
@@ -280,7 +281,7 @@
                     status.textContent = '► PLAYING...';
                     updateVisualizer();
                 }).catch(e => {
-                    status.textContent = `PLAY FAIL: REUPLOAD MP3`;
+                    status.textContent = `PLAY FAIL: CHECK MP3`;
                 });
             } else {
                 audio.pause();
@@ -296,7 +297,7 @@
                 loadTrack(index);
                 if (!audio.paused) {
                     audio.play().catch(e => {
-                        status.textContent = `SWITCH FAIL: REUPLOAD MP3`;
+                        status.textContent = `SWITCH FAIL: CHECK MP3`;
                     });
                 }
             });
