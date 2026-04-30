@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATRIX_TERMINAL</title>
+    <title>MATRIX_LIBRARY</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,11 +51,11 @@
             bottom: 40px;
             right: 40px;
             text-align: right;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.9);
             padding: 20px;
             border: 2px solid #00ff00;
             box-shadow: 0 0 20px #00ff00;
-            width: 320px;
+            width: 400px;
         }
 
 .button {
@@ -75,12 +75,34 @@
 .button:hover { background: #00ff00; color: #000; box-shadow: 0 0 40px #00ff00; }
 .button:active { transform: scale(0.95); }
 
+.track-row {
+            display: flex;
+            gap: 5px;
+            margin: 3px 0;
+      }
+
 .playlist-btn {
             font-size: 16px;
             padding: 8px 15px;
-            margin: 3px 0;
+            flex: 1;
       }
 .playlist-btn.active {
+            background: #00ff00;
+            color: #000;
+      }
+
+.download-btn {
+            font-size: 16px;
+            padding: 8px 12px;
+            width: 50px;
+            border: 2px solid #00ff00;
+            background: #000;
+            color: #00ff00;
+            cursor: pointer;
+            font-family: 'VT323', monospace;
+            box-shadow: 0 0 20px #00ff00;
+      }
+.download-btn:hover {
             background: #00ff00;
             color: #000;
       }
@@ -120,17 +142,27 @@
     <div class="terminal">
         <div class="header-top">
 ╔══════════════════════════════════════════════════╗
-║ SEBAS_DRD // THOMSON NEO17 // MATRIX v5.1 ║
-║ >> DEBUG MODE ACTIVE << ║
+║ SEBAS_DRD // THOMSON NEO17 // MATRIX v6.0 ║
+║ >> LIBRARY + DOWNLOAD MODULE << ║
 ╚══════════════════════════════════════════════════╝
-            <div class="title">MATRIX TERMINAL</div>
+            <div class="title">MATRIX LIBRARY</div>
         </div>
 
         <div class="player">
             <button class="button" id="playBtn">► START TECHNO</button>
-            <button class="button playlist-btn" data-track="0">01. TRACK 1</button>
-            <button class="button playlist-btn" data-track="1">02. TRACK 2</button>
-            <button class="button playlist-btn" data-track="2">03. TRACK 3</button>
+
+            <div class="track-row">
+                <button class="button playlist-btn" data-track="0">01. TRACK 1</button>
+                <button class="download-btn" data-file="track1.mp3">↓</button>
+            </div>
+            <div class="track-row">
+                <button class="button playlist-btn" data-track="1">02. TRACK 2</button>
+                <button class="download-btn" data-file="track2.mp3">↓</button>
+            </div>
+            <div class="track-row">
+                <button class="button playlist-btn" data-track="2">03. TRACK 3</button>
+                <button class="download-btn" data-file="track3.mp3">↓</button>
+            </div>
 
             <div class="visualizer" id="visualizer"></div>
 
@@ -140,7 +172,7 @@
         </div>
     </div>
 
-    <audio id="matrixAudio" preload="auto" crossorigin="anonymous"></audio>
+    <audio id="matrixAudio" preload="metadata"></audio>
 
     <script>
         // Matrix rain
@@ -173,16 +205,16 @@
         }
         setInterval(drawMatrix, 35);
 
-        // Player + Playlist + Visualizer
+        // Player + Playlist + Visualizer + Download
         const audio = document.getElementById('matrixAudio');
         const playBtn = document.getElementById('playBtn');
         const status = document.getElementById('status');
         const timer = document.getElementById('timer');
         const trackInfo = document.getElementById('trackInfo');
         const playlistBtns = document.querySelectorAll('.playlist-btn');
+        const downloadBtns = document.querySelectorAll('.download-btn');
         const visualizer = document.getElementById('visualizer');
 
-        // PLAYLIST AVEC CHEMINS ABSOLUS POUR GITHUB PAGES
         const playlist = [
             { name: 'TRACK 1', file: 'track1.mp3' },
             { name: 'TRACK 2', file: 'track2.mp3' },
@@ -212,7 +244,6 @@
                 source.connect(analyser);
                 analyser.connect(audioContext.destination);
                 analyser.fftSize = 64;
-                status.textContent = 'AUDIO CONTEXT OK';
             }
         }
 
@@ -235,7 +266,7 @@
             playlistBtns.forEach((btn, i) => {
                 btn.classList.toggle('active', i === index);
             });
-            status.textContent = `LOADING ${playlist[index].file}...`;
+            status.textContent = `READY: ${playlist[index].file}`;
         }
 
         function playPause() {
@@ -249,7 +280,7 @@
                     status.textContent = '► PLAYING...';
                     updateVisualizer();
                 }).catch(e => {
-                    status.textContent = `PLAY ERROR: ${e.message}`;
+                    status.textContent = `PLAY FAIL: REUPLOAD MP3`;
                 });
             } else {
                 audio.pause();
@@ -265,9 +296,25 @@
                 loadTrack(index);
                 if (!audio.paused) {
                     audio.play().catch(e => {
-                        status.textContent = `SWITCH ERROR: ${e.message}`;
+                        status.textContent = `SWITCH FAIL: REUPLOAD MP3`;
                     });
                 }
+            });
+        });
+
+        // DOWNLOAD SYSTEM
+        downloadBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const file = btn.getAttribute('data-file');
+                const link = document.createElement('a');
+                link.href = file;
+                link.download = file;
+                link.click();
+                status.textContent = `DOWNLOADING: ${file}`;
+                setTimeout(() => {
+                    status.textContent = 'READY';
+                }, 2000);
             });
         });
 
@@ -277,25 +324,20 @@
             timer.textContent = `${cur} / ${dur}`;
         });
 
-        audio.addEventListener('loadedmetadata', () => {
-            status.textContent = 'TRACK LOADED - READY';
+        audio.addEventListener('loadeddata', () => {
+            status.textContent = 'TRACK LOADED - CLICK START';
         });
 
         audio.addEventListener('error', () => {
             const err = audio.error;
-            let msg = 'FICHIER INTROUVABLE';
+            let msg = 'UNKNOWN';
             if (err) {
                 if (err.code === 1) msg = 'ABORTED';
-                if (err.code === 2) msg = 'NETWORK ERROR';
-                if (err.code === 3) msg = 'DECODE ERROR';
-                if (err.code === 4) msg = 'SRC NOT SUPPORTED';
+                if (err.code === 2) msg = 'NETWORK - BAD FILE';
+                if (err.code === 3) msg = 'DECODE - REUPLOAD MP3';
+                if (err.code === 4) msg = '404 NOT FOUND';
             }
-            status.textContent = `ERREUR: ${msg}`;
-            console.error('Audio error:', err);
-        });
-
-        audio.addEventListener('canplay', () => {
-            status.textContent = 'CAN PLAY - CLICK START';
+            status.textContent = `ERROR: ${msg}`;
         });
 
         audio.addEventListener('ended', () => {
