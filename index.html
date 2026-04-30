@@ -21,7 +21,6 @@
             z-index: 10;
             width: 100vw;
             height: 100vh;
-            text-shadow: 0 0 10px #00ff00;
         }
 
 .header-top {
@@ -33,12 +32,14 @@
             white-space: pre;
             font-size: 18px;
             line-height: 1.2;
+            text-shadow: 0 0 10px #00ff00;
         }
 
 .title {
             font-size: 48px;
             animation: glitch 2s infinite;
             margin-top: 10px;
+            text-shadow: 0 0 10px #00ff00;
         }
 
       @keyframes glitch {
@@ -55,9 +56,10 @@
             padding: 20px;
             border: 2px solid #00ff00;
             box-shadow: 0 0 20px #00ff00;
-            width: 460px;
+            width: 480px;
             max-height: 90vh;
             overflow-y: auto;
+            text-shadow: 0 0 5px #00ff00;
         }
 
 .button {
@@ -73,8 +75,9 @@
             box-shadow: 0 0 20px #00ff00;
             transition: all 0.1s;
             width: 100%;
+            text-shadow: 0 0 5px #00ff00;
         }
-.button:hover { background: #00ff00; color: #000; box-shadow: 0 0 40px #00ff00; }
+.button:hover { background: #00ff00; color: #000; box-shadow: 0 0 40px #00ff00; text-shadow: none; }
 .button:active { transform: scale(0.95); }
 .button.small { font-size: 16px; padding: 8px 12px; width: auto; }
 
@@ -84,7 +87,7 @@
             margin: 10px 0;
       }
 .controls.button { flex: 1; }
-.controls.button.active { background: #00ff00; color: #000; }
+.controls.button.active { background: #00ff00; color: #000; text-shadow: none; }
 
 .track-row {
             display: flex;
@@ -110,10 +113,15 @@
             font-size: 16px;
             padding: 8px 15px;
             flex: 1;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
       }
 .playlist-btn.active {
             background: #00ff00;
             color: #000;
+            text-shadow: none;
       }
 
 .download-btn {
@@ -126,10 +134,12 @@
             cursor: pointer;
             font-family: 'VT323', monospace;
             box-shadow: 0 0 20px #00ff00;
+            flex-shrink: 0;
       }
 .download-btn:hover {
             background: #00ff00;
             color: #000;
+            text-shadow: none;
       }
 
 .volume-row {
@@ -159,7 +169,7 @@
 
 .status { margin-top: 15px; font-size: 18px; height: 22px; }
 .timer { margin-top: 5px; font-size: 16px; opacity: 0.8; }
-.track-info { margin-top: 8px; font-size: 16px; color: #00ff00; opacity: 0.9; }
+.track-info { margin-top: 8px; font-size: 16px; color: #00ff00; opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .visualizer {
             width: 100%;
@@ -209,8 +219,8 @@
     <div class="terminal">
         <div class="header-top">
 ╔══════════════════════════════════════════════════╗
-║ SEBAS_DRD // THOMSON NEO17 // MATRIX v8.1 ║
-║ >> STABLE BUILD - NO FLICKER << ║
+║ SEBAS_DRD // THOMSON NEO17 // MATRIX v8.2 ║
+║ >> STABLE - NO FLICKER << ║
 ╚══════════════════════════════════════════════════╝
             <div class="title">MATRIX LIBRARY PRO</div>
         </div>
@@ -322,7 +332,7 @@
                 row.className = 'track-row';
                 row.innerHTML = `
                     <div class="cover">${track.cover}</div>
-                    <button class="button playlist-btn" data-track="${index}">${String(index+1).padStart(2,'0')}. ${track.name}</button>
+                    <button class="button playlist-btn" data-track="${index}" title="${track.name}">${String(index+1).padStart(2,'0')}. ${track.name}</button>
                     <button class="download-btn" data-file="${track.file}">↓</button>
                 `;
                 playlistDiv.appendChild(row);
@@ -461,7 +471,7 @@
                     playlist.push({
                         name: name,
                         file: url,
-                        cover: name[0]
+                        cover: name[0] || '?'
                     });
                     status.textContent = `ADDED: ${name}`;
                 }
