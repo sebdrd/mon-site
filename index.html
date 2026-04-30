@@ -120,17 +120,17 @@
     <div class="terminal">
         <div class="header-top">
 ╔══════════════════════════════════════════════════╗
-║ SEBAS_DRD // THOMSON NEO17 // MATRIX v4.1 ║
-║ >> LEGACY FILENAME SUPPORT << ║
+║ SEBAS_DRD // THOMSON NEO17 // MATRIX v5.0 ║
+║ >> TRIPLE TRACK SYSTEM ONLINE << ║
 ╚══════════════════════════════════════════════════╝
             <div class="title">MATRIX TERMINAL</div>
         </div>
 
         <div class="player">
             <button class="button" id="playBtn">► START TECHNO</button>
-            <button class="button playlist-btn" data-track="0">01. WATERMELLO SPORT</button>
-            <button class="button playlist-btn" data-track="1">02. NEON PULSE</button>
-            <button class="button playlist-btn" data-track="2">03. CYBER WAGNER</button>
+            <button class="button playlist-btn" data-track="0">01. TRACK 1</button>
+            <button class="button playlist-btn" data-track="1">02. TRACK 2</button>
+            <button class="button playlist-btn" data-track="2">03. TRACK 3</button>
 
             <div class="visualizer" id="visualizer"></div>
 
@@ -182,11 +182,11 @@
         const playlistBtns = document.querySelectorAll('.playlist-btn');
         const visualizer = document.getElementById('visualizer');
 
-        // PLAYLIST AVEC TES VRAIS NOMS GITHUB ACTUELS
+        // PLAYLIST FINALE AVEC TES NOMS GITHUB
         const playlist = [
-            { name: 'WATERMELLO SPORT', file: './watermello-sport-techno.mp3.mp3' },
-            { name: 'NEON PULSE', file: './neon%20pulse.mp3.mp3' },
-            { name: 'CYBER WAGNER', file: './cyber_wagner.mp3.mp3' }
+            { name: 'TRACK 1', file: './track1.mp3' },
+            { name: 'TRACK 2', file: './track2.mp3' },
+            { name: 'TRACK 3', file: './track3.mp3' }
         ];
 
         let currentTrack = 0;
