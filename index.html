@@ -19,7 +19,7 @@
         }
         #matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 
-        /* GHOST RIDER - LAYOUT PC PAR DÉFAUT */
+        /* GHOST RIDER HELLFIRE */
 .ghost-container {
             position: fixed;
             top: 50%;
@@ -36,13 +36,13 @@
 
         @keyframes ghost-intro {
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); filter: blur(30px); }
-            100% { opacity: 0.22; transform: translate(-50%, -50%) scale(1); filter: blur(0px); }
+            100% { opacity: 0.28; transform: translate(-50%, -50%) scale(1); filter: blur(0px); }
         }
 
 .ghost-rider {
             width: 100%;
             height: auto;
-            filter: sepia(1) hue-rotate(75deg) saturate(8) brightness(2.2) contrast(1.5);
+            filter: sepia(1) hue-rotate(-20deg) saturate(10) brightness(2.5) contrast(1.8);
             mix-blend-mode: screen;
             animation: ghost-pulse 3.5s infinite ease-in-out, ghost-glitch 0.12s infinite;
             transition: filter 0.05s;
@@ -56,12 +56,12 @@
             width: 110%;
             height: 130%;
             background:
-                radial-gradient(ellipse at 50% 0%, rgba(0,255,0,0.4) 0%, transparent 40%),
-                radial-gradient(ellipse at 30% 10%, rgba(0,255,100,0.3) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 5%, rgba(0,255,50,0.3) 0%, transparent 45%);
+                radial-gradient(ellipse at 50% 0%, rgba(255,100,0,0.6) 0%, transparent 40%),
+                radial-gradient(ellipse at 30% 10%, rgba(255,0,0,0.5) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 5%, rgba(255,200,0,0.4) 0%, transparent 45%);
             filter: blur(15px);
-            animation: flame-dance 2s infinite ease-in-out;
-            opacity: 0.6;
+            animation: flame-dance 1.8s infinite ease-in-out;
+            opacity: 0.8;
             mix-blend-mode: screen;
         }
 
@@ -77,13 +77,13 @@
         }
 
         @keyframes ghost-glitch {
-            0%, 100% { filter: sepia(1) hue-rotate(75deg) saturate(8) brightness(2.2) contrast(1.5); }
-            50% { filter: sepia(1) hue-rotate(75deg) saturate(9) brightness(2.8) contrast(1.7) drop-shadow(0 0 20px #00ff00); }
+            0%, 100% { filter: sepia(1) hue-rotate(-20deg) saturate(10) brightness(2.5) contrast(1.8); }
+            50% { filter: sepia(1) hue-rotate(-10deg) saturate(12) brightness(3.2) contrast(2) drop-shadow(0 0 25px #ff6600); }
         }
 
 .ghost-rider.bass-hit {
             animation: ghost-pulse 0.15s ease-out, ghost-glitch 0.1s infinite!important;
-            filter: sepia(1) hue-rotate(75deg) saturate(15) brightness(5) contrast(2.5) drop-shadow(0 0 40px #00ff00)!important;
+            filter: sepia(1) hue-rotate(-30deg) saturate(15) brightness(6) contrast(3) drop-shadow(0 0 50px #ff0000) drop-shadow(0 0 30px #ffaa00)!important;
         }
 
 .terminal {
@@ -121,7 +121,6 @@
             z-index: 11;
         }
 
-        /* PLAYER - LAYOUT PC PAR DÉFAUT À DROITE */
 .player {
             position: absolute;
             bottom: 40px;
@@ -284,17 +283,17 @@
             background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
         }
 
-        /* LAYOUT MOBILE - GHOST CENTRÉ + PLAYER EN BAS */
+        /* LAYOUT MOBILE */
         @media (max-width: 768px) {
-        .ghost-container {
+     .ghost-container {
               top: 38%;
               left: 50%;
               width: 90vw;
               max-width: 500px;
           }
-        .ghost-container { opacity: 0.35!important; }
+     .ghost-container { opacity: 0.35!important; }
 
-        .player {
+     .player {
               bottom: 10px;
               left: 50%;
               right: auto;
@@ -303,12 +302,12 @@
               padding: 12px;
               max-height: 52vh;
           }
-        .title-top { font-size: 36px; top: 15px; }
-        .footer-sig { font-size: 10px; bottom: 5px; left: 5px; }
-        .button { padding: 16px 20px; font-size: 18px; }
-        .button.small { font-size: 14px; padding: 12px; }
-        .visualizer { height: 50px; }
-        .bar { width: 6px; }
+     .title-top { font-size: 36px; top: 15px; }
+     .footer-sig { font-size: 10px; bottom: 5px; left: 5px; }
+     .button { padding: 16px 20px; font-size: 18px; }
+     .button.small { font-size: 14px; padding: 12px; }
+     .visualizer { height: 50px; }
+     .bar { width: 6px; }
         }
     </style>
 </head>
@@ -316,7 +315,7 @@
     <canvas id="matrix"></canvas>
     <div class="scanlines"></div>
 
-    <!-- GHOST RIDER RESPONSIVE -->
+    <!-- GHOST RIDER HELLFIRE -->
     <div class="ghost-container">
         <div class="flames"></div>
         <img src="ghostrider.jpeg" class="ghost-rider" alt="Ghost Rider" id="ghostRider">
@@ -485,7 +484,7 @@
             requestAnimationFrame(updateVisualizer);
             analyser.getByteFrequencyData(dataArray);
 
-            // BASS PULSE GHOST RIDER
+            // BASS PULSE GHOST RIDER HELLFIRE
             let bass = (dataArray[0] + dataArray[1] + dataArray[2] + dataArray[3]) / 4;
             if (bass > 180 && Date.now() - lastBassHit > 80) {
                 ghostRider.classList.add('bass-hit');
