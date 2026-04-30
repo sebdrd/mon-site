@@ -120,8 +120,8 @@
     <div class="terminal">
         <div class="header-top">
 ╔══════════════════════════════════════════════════╗
-║ SEBAS_DRD // THOMSON NEO17 // MATRIX v5.0 ║
-║ >> TRIPLE TRACK SYSTEM ONLINE << ║
+║ SEBAS_DRD // THOMSON NEO17 // MATRIX v5.1 ║
+║ >> DEBUG MODE ACTIVE << ║
 ╚══════════════════════════════════════════════════╝
             <div class="title">MATRIX TERMINAL</div>
         </div>
@@ -140,7 +140,7 @@
         </div>
     </div>
 
-    <audio id="matrixAudio" loop preload="auto" crossorigin="anonymous"></audio>
+    <audio id="matrixAudio" preload="auto" crossorigin="anonymous"></audio>
 
     <script>
         // Matrix rain
@@ -182,25 +182,19 @@
         const playlistBtns = document.querySelectorAll('.playlist-btn');
         const visualizer = document.getElementById('visualizer');
 
-        // PLAYLIST FINALE AVEC TES NOMS GITHUB
+        // PLAYLIST AVEC CHEMINS ABSOLUS POUR GITHUB PAGES
         const playlist = [
-            { name: 'TRACK 1', file: './track1.mp3' },
-            { name: 'TRACK 2', file: './track2.mp3' },
-            { name: 'TRACK 3', file: './track3.mp3' }
+            { name: 'TRACK 1', file: 'track1.mp3' },
+            { name: 'TRACK 2', file: 'track2.mp3' },
+            { name: 'TRACK 3', file: 'track3.mp3' }
         ];
 
         let currentTrack = 0;
         audio.volume = 1.0;
-
-        // Visualizer setup
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const analyser = audioContext.createAnalyser();
-        const source = audioContext.createMediaElementSource(audio);
-        source.connect(analyser);
-        analyser.connect(audioContext.destination);
-        analyser.fftSize = 64;
-        const bufferLength = analyser.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
+        let audioContext;
+        let analyser;
+        let source;
+        let bars;
 
         // Create visualizer bars
         for(let i = 0; i < 32; i++) {
@@ -208,10 +202,25 @@
             bar.className = 'bar';
             visualizer.appendChild(bar);
         }
-        const bars = document.querySelectorAll('.bar');
+        bars = document.querySelectorAll('.bar');
+
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                source = audioContext.createMediaElementSource(audio);
+                source.connect(analyser);
+                analyser.connect(audioContext.destination);
+                analyser.fftSize = 64;
+                status.textContent = 'AUDIO CONTEXT OK';
+            }
+        }
 
         function updateVisualizer() {
+            if (!analyser) return;
             requestAnimationFrame(updateVisualizer);
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
             analyser.getByteFrequencyData(dataArray);
             for(let i = 0; i < 32; i++) {
                 const height = (dataArray[i] / 255) * 60;
@@ -226,9 +235,11 @@
             playlistBtns.forEach((btn, i) => {
                 btn.classList.toggle('active', i === index);
             });
+            status.textContent = `LOADING ${playlist[index].file}...`;
         }
 
         function playPause() {
+            initAudioContext();
             if (audioContext.state === 'suspended') {
                 audioContext.resume();
             }
@@ -238,7 +249,7 @@
                     status.textContent = '► PLAYING...';
                     updateVisualizer();
                 }).catch(e => {
-                    status.textContent = 'ERREUR: AUTORISEZ LE SON';
+                    status.textContent = `PLAY ERROR: ${e.message}`;
                 });
             } else {
                 audio.pause();
@@ -253,7 +264,9 @@
             btn.addEventListener('click', () => {
                 loadTrack(index);
                 if (!audio.paused) {
-                    audio.play();
+                    audio.play().catch(e => {
+                        status.textContent = `SWITCH ERROR: ${e.message}`;
+                    });
                 }
             });
         });
@@ -269,7 +282,20 @@
         });
 
         audio.addEventListener('error', () => {
-            status.textContent = 'ERREUR: FICHIER INTROUVABLE';
+            const err = audio.error;
+            let msg = 'FICHIER INTROUVABLE';
+            if (err) {
+                if (err.code === 1) msg = 'ABORTED';
+                if (err.code === 2) msg = 'NETWORK ERROR';
+                if (err.code === 3) msg = 'DECODE ERROR';
+                if (err.code === 4) msg = 'SRC NOT SUPPORTED';
+            }
+            status.textContent = `ERREUR: ${msg}`;
+            console.error('Audio error:', err);
+        });
+
+        audio.addEventListener('canplay', () => {
+            status.textContent = 'CAN PLAY - CLICK START';
         });
 
         audio.addEventListener('ended', () => {
