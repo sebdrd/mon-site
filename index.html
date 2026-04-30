@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>MATRIX_LIBRARY_PRO</title>
+    <title>MATRIX_LIBRARY_PRO - CAR AUDIO</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            background: #000;
+            background: #0a0a0a;
+            background-image:
+                linear-gradient(90deg, #111 1px, transparent 1px),
+                linear-gradient(#111 1px, transparent 1px);
+            background-size: 20px 20px;
             color: #00ff00;
-            font-family: 'VT323', monospace;
-            font-size: 20px;
+            font-family: 'Orbitron', monospace;
             overflow: hidden;
             position: fixed;
             width: 100%;
             height: 100%;
         }
-        #matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        #matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.3; }
 
         /* GHOST RIDER HELLFIRE */
 .ghost-container {
@@ -25,18 +28,18 @@
             top: 50%;
             left: 25%;
             transform: translate(-50%, -50%);
-            width: 40vw;
-            max-width: 700px;
+            width: 35vw;
+            max-width: 600px;
             height: auto;
             z-index: 4;
-            opacity: 0;
+            opacity: 0.25;
             animation: ghost-intro 2s ease-out 0.3s forwards;
             pointer-events: none;
         }
 
         @keyframes ghost-intro {
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); filter: blur(30px); }
-            100% { opacity: 0.28; transform: translate(-50%, -50%) scale(1); filter: blur(0px); }
+            100% { opacity: 0.25; transform: translate(-50%, -50%) scale(1); filter: blur(0px); }
         }
 
 .ghost-rider {
@@ -95,185 +98,335 @@
 
 .title-top {
             position: absolute;
-            top: 30px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 64px;
+            font-size: 48px;
+            font-weight: 900;
             text-align: center;
-            text-shadow: 0 0 20px #00ff00;
-            animation: glitch 2s infinite;
-            letter-spacing: 4px;
+            color: #00ff00;
+            text-shadow:
+                0 0 10px #00ff00,
+                0 0 20px #00ff00,
+                0 0 30px #00ff00;
+            letter-spacing: 8px;
             z-index: 11;
-        }
-
-      @keyframes glitch {
-            0%, 100% { text-shadow: 0 0 20px #00ff00; }
-            50% { text-shadow: -3px 0 #ff0000, 3px 0 #0000ff, 0 0 20px #00ff00; }
         }
 
 .footer-sig {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            font-size: 14px;
-            opacity: 0.6;
+            bottom: 15px;
+            left: 15px;
+            font-size: 11px;
+            opacity: 0.5;
+            color: #00ff00;
             text-shadow: 0 0 5px #00ff00;
             z-index: 11;
+            letter-spacing: 2px;
         }
 
-.player {
+        /* AUTORADIO PIONEER/CLARION STYLE */
+.car-stereo {
             position: absolute;
-            bottom: 40px;
-            right: 40px;
-            text-align: right;
-            background: rgba(0,0,0,0.95);
-            padding: 20px;
-            border: 2px solid #00ff00;
-            box-shadow: 0 0 20px #00ff00;
-            width: 480px;
-            max-height: 90vh;
-            overflow-y: auto;
-            text-shadow: 0 0 5px #00ff00;
+            bottom: 30px;
+            right: 30px;
+            width: 520px;
+            background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%);
+            border: 3px solid #333;
+            border-radius: 8px;
+            box-shadow:
+                0 0 30px rgba(0,255,0,0.3),
+                inset 0 2px 5px rgba(255,255,255,0.1),
+                inset 0 -2px 5px rgba(0,0,0,0.8);
+            padding: 15px;
             z-index: 12;
         }
 
-.button {
-            background: #000;
-            border: 2px solid #00ff00;
-            color: #00ff00;
-            padding: 12px 20px;
-            font-family: 'VT323', monospace;
-            font-size: 20px;
-            cursor: pointer;
-            margin: 5px 0;
-            text-transform: uppercase;
-            box-shadow: 0 0 20px #00ff00;
-            transition: all 0.1s;
-            width: 100%;
-            text-shadow: 0 0 5px #00ff00;
-            touch-action: manipulation;
+        /* ÉCRAN LCD VERT */
+.lcd-screen {
+            background: #0a1a0a;
+            border: 2px solid #333;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 12px;
+            box-shadow:
+                inset 0 0 20px rgba(0,0,0,0.8),
+                inset 0 2px 10px rgba(0,255,0,0.1);
+            position: relative;
+            overflow: hidden;
         }
-.button:active { background: #00ff00; color: #000; box-shadow: 0 0 40px #00ff00; text-shadow: none; transform: scale(0.98); }
-.button.small { font-size: 16px; padding: 8px 12px; width: auto; }
 
-.controls {
-            display: flex;
-            gap: 5px;
-            margin: 10px 0;
-      }
-.controls.button { flex: 1; }
-.controls.button.active { background: #00ff00; color: #000; text-shadow: none; }
+.lcd-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            pointer-events: none;
+        }
 
-.track-row {
-            display: flex;
-            gap: 5px;
-            margin: 3px 0;
-            align-items: center;
-      }
+.lcd-text {
+            font-family: 'Orbitron', monospace;
+            color: #00ff41;
+            text-shadow: 0 0 8px #00ff41;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-.cover {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #00ff00;
-            background: #001100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 0 10px #00ff00;
-            flex-shrink: 0;
-      }
-
-.playlist-btn {
-            font-size: 16px;
-            padding: 8px 15px;
-            flex: 1;
-            text-align: left;
+.track-display {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 8px 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-      }
-.playlist-btn.active {
-            background: #00ff00;
-            color: #000;
-            text-shadow: none;
-      }
+        }
 
-.download-btn {
-            font-size: 16px;
-            padding: 8px 12px;
-            width: 50px;
-            border: 2px solid #00ff00;
-            background: #000;
-            color: #00ff00;
+.timer-display {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 3px;
+        }
+
+.status-display {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        /* VISUALISEUR BARRES EQ STYLE AUTORADIO */
+.eq-visualizer {
+            width: 100%;
+            height: 40px;
+            margin: 8px 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 3px;
+            padding: 0 5px;
+        }
+.eq-bar {
+            background: linear-gradient(180deg, #00ff41 0%, #00aa00 100%);
+            width: 12px;
+            height: 2px;
+            box-shadow: 0 0 5px #00ff41;
+            transition: height 0.05s;
+            border-radius: 1px 1px 0 0;
+        }
+
+        /* BOUTONS STYLE AUTORADIO */
+.button-row {
+            display: flex;
+            gap: 6px;
+            margin: 8px 0;
+        }
+
+.car-button {
+            background: linear-gradient(180deg, #3a3a3a 0%, #1a1a1a 100%);
+            border: 2px solid #444;
+            border-radius: 4px;
+            color: #00ff41;
+            padding: 14px 10px;
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            font-weight: 700;
             cursor: pointer;
-            font-family: 'VT323', monospace;
-            box-shadow: 0 0 20px #00ff00;
-            flex-shrink: 0;
-      }
-.download-btn:active {
-            background: #00ff00;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow:
+                0 3px 5px rgba(0,0,0,0.5),
+                inset 0 1px 2px rgba(255,255,255,0.1);
+            transition: all 0.1s;
+            flex: 1;
+            text-shadow: 0 0 5px #00ff41;
+            touch-action: manipulation;
+        }
+
+.car-button:active {
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            box-shadow:
+                0 1px 2px rgba(0,0,0,0.5),
+                inset 0 2px 5px rgba(0,0,0,0.5);
+            transform: translateY(2px);
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+.car-button.active {
+            background: linear-gradient(180deg, #00aa00 0%, #006600 100%);
             color: #000;
             text-shadow: none;
-      }
+            box-shadow:
+                0 0 15px #00ff00,
+                inset 0 2px 5px rgba(0,0,0,0.3);
+        }
 
-.volume-row {
+.car-button.big {
+            padding: 18px 10px;
+            font-size: 14px;
+        }
+
+        /* BOUTON PLAY STYLE PIONEER */
+.play-button {
+            background: linear-gradient(180deg, #4a4a4a 0%, #2a2a2a 100%);
+            border: 3px solid #555;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow:
+                0 4px 8px rgba(0,0,0,0.6),
+                inset 0 2px 3px rgba(255,255,255,0.1);
+        }
+
+.play-button:active {
+            transform: scale(0.95);
+            box-shadow:
+                0 2px 4px rgba(0,0,0,0.6),
+                inset 0 3px 6px rgba(0,0,0,0.4);
+        }
+
+        /* VOLUME KNOB STYLE */
+.volume-section {
             display: flex;
             align-items: center;
             gap: 10px;
             margin: 10px 0;
-            font-size: 16px;
-      }
+            padding: 8px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+
+.volume-label {
+            font-size: 11px;
+            color: #00ff41;
+            text-shadow: 0 0 5px #00ff41;
+            font-weight: 700;
+        }
 
 #volume {
             flex: 1;
-            height: 8px;
-            background: #000;
-            border: 1px solid #00ff00;
+            height: 6px;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 3px;
             outline: none;
             -webkit-appearance: none;
-      }
+        }
 #volume::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            background: #00ff00;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(180deg, #4a4a4a 0%, #2a2a2a 100%);
+            border: 2px solid #555;
+            border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 10px #00ff00;
-      }
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
 
-.status { margin-top: 15px; font-size: 18px; height: 22px; }
-.timer { margin-top: 5px; font-size: 16px; opacity: 0.8; }
-.track-info { margin-top: 8px; font-size: 16px; color: #00ff00; opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#volDisplay {
+            font-size: 12px;
+            color: #00ff41;
+            text-shadow: 0 0 5px #00ff41;
+            font-weight: 700;
+            min-width: 45px;
+        }
 
-.visualizer {
-            width: 100%;
-            height: 60px;
-            margin: 10px 0;
+        /* PLAYLIST STYLE AUTORADIO */
+.playlist-container {
+            max-height: 180px;
+            overflow-y: auto;
+            margin: 8px 0;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid #333;
+            border-radius: 3px;
+            padding: 5px;
+        }
+
+.playlist-container::-webkit-scrollbar {
+            width: 6px;
+        }
+.playlist-container::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+.playlist-container::-webkit-scrollbar-thumb {
+            background: #00ff41;
+            border-radius: 3px;
+        }
+
+.track-row {
             display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 2px;
+            gap: 6px;
+            margin: 4px 0;
+            align-items: center;
       }
-.bar {
-            background: #00ff00;
-            width: 8px;
-            height: 2px;
-            box-shadow: 0 0 5px #00ff00;
-            transition: height 0.05s;
-      }
+
+.track-button {
+            flex: 1;
+            background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 1px solid #333;
+            border-radius: 3px;
+            color: #00ff41;
+            padding: 10px 12px;
+            font-family: 'Orbitron', monospace;
+            font-size: 11px;
+            cursor: pointer;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: 0 0 3px #00ff41;
+            transition: all 0.1s;
+        }
+.track-button:active {
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            transform: translateX(2px);
+        }
+.track-button.active {
+            background: linear-gradient(180deg, #00aa00 0%, #006600 100%);
+            color: #000;
+            text-shadow: none;
+            box-shadow: 0 0 10px #00ff00;
+        }
+
+.download-btn {
+            background: linear-gradient(180deg, #3a3a3a 0%, #1a1a1a 100%);
+            border: 1px solid #444;
+            border-radius: 3px;
+            color: #00ff41;
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            width: 40px;
+            text-shadow: 0 0 3px #00ff41;
+        }
+.download-btn:active {
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+        }
 
 .upload-zone {
-            border: 2px dashed #00ff00;
-            padding: 15px;
-            margin: 10px 0;
+            border: 2px dashed #333;
+            border-radius: 4px;
+            padding: 12px;
+            margin: 8px 0;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
-      }
+            font-size: 11px;
+            color: #00ff41;
+            text-shadow: 0 0 3px #00ff41;
+            background: rgba(0,0,0,0.2);
+        }
 .upload-zone:active {
             background: rgba(0, 255, 0, 0.1);
-            box-shadow: 0 0 20px #00ff00;
+            border-color: #00ff41;
+            box-shadow: 0 0 15px rgba(0,255,0,0.3);
       }
 #fileInput { display: none; }
 
@@ -283,31 +436,35 @@
             background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
         }
 
-        /* LAYOUT MOBILE */
+        /* MOBILE */
         @media (max-width: 768px) {
-     .ghost-container {
-              top: 38%;
+    .ghost-container {
+              top: 30%;
               left: 50%;
-              width: 90vw;
-              max-width: 500px;
+              width: 85vw;
+              max-width: 400px;
           }
-     .ghost-container { opacity: 0.35!important; }
+    .ghost-container { opacity: 0.3!important; }
 
-     .player {
+    .car-stereo {
               bottom: 10px;
               left: 50%;
               right: auto;
               transform: translateX(-50%);
               width: 96vw;
               padding: 12px;
-              max-height: 52vh;
+              max-height: 58vh;
           }
-     .title-top { font-size: 36px; top: 15px; }
-     .footer-sig { font-size: 10px; bottom: 5px; left: 5px; }
-     .button { padding: 16px 20px; font-size: 18px; }
-     .button.small { font-size: 14px; padding: 12px; }
-     .visualizer { height: 50px; }
-     .bar { width: 6px; }
+    .title-top { font-size: 28px; top: 10px; letter-spacing: 4px; }
+    .footer-sig { font-size: 9px; bottom: 5px; left: 5px; }
+    .lcd-text { font-size: 12px; }
+    .track-display { font-size: 15px; }
+    .timer-display { font-size: 20px; }
+    .car-button { padding: 12px 8px; font-size: 11px; }
+    .play-button { width: 50px; height: 50px; font-size: 20px; }
+    .eq-visualizer { height: 35px; }
+    .eq-bar { width: 10px; }
+    .playlist-container { max-height: 140px; }
         }
     </style>
 </head>
@@ -322,35 +479,41 @@
     </div>
 
     <div class="terminal">
-        <div class="title-top">MATRIX LIBRARY PRO</div>
-        <div class="footer-sig">SEBDRD / MATRIX</div>
+        <div class="title-top">MATRIX LIBRARY</div>
+        <div class="footer-sig">SEBDRD / CAR AUDIO 2005</div>
 
-        <div class="player">
-            <button class="button" id="playBtn">► START TECHNO</button>
-
-            <div class="controls">
-                <button class="button small" id="loopBtn">LOOP: OFF</button>
-                <button class="button small" id="shuffleBtn">SHUFFLE: OFF</button>
+        <!-- AUTORADIO PIONEER/CLARION STYLE -->
+        <div class="car-stereo">
+            <!-- ÉCRAN LCD -->
+            <div class="lcd-screen">
+                <div class="lcd-text track-display" id="trackInfo">TRACK: --</div>
+                <div class="eq-visualizer" id="visualizer"></div>
+                <div class="lcd-text timer-display" id="timer">0:00 / 0:00</div>
+                <div class="lcd-text status-display" id="status">SYSTEM READY</div>
             </div>
 
-            <div class="volume-row">
-                <span>VOL:</span>
+            <!-- BOUTONS PRINCIPAUX -->
+            <div class="button-row">
+                <button class="car-button big play-button" id="playBtn">▶</button>
+                <button class="car-button" id="loopBtn">LOOP</button>
+                <button class="car-button" id="shuffleBtn">RND</button>
+            </div>
+
+            <!-- VOLUME -->
+            <div class="volume-section">
+                <span class="volume-label">VOL</span>
                 <input type="range" id="volume" min="0" max="100" value="100">
                 <span id="volDisplay">100%</span>
             </div>
 
-            <div id="playlist"></div>
+            <!-- PLAYLIST -->
+            <div class="playlist-container" id="playlist"></div>
 
+            <!-- UPLOAD -->
             <div class="upload-zone" id="uploadZone">
-                [+] TAP TO ADD MP3
+                [+] ADD MP3
                 <input type="file" id="fileInput" accept="audio/mpeg" multiple>
             </div>
-
-            <div class="visualizer" id="visualizer"></div>
-
-            <div class="track-info" id="trackInfo">TRACK: --</div>
-            <div class="status" id="status">SYSTEM READY</div>
-            <div class="timer" id="timer">0:00 / 0:00</div>
         </div>
     </div>
 
@@ -378,7 +541,7 @@
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#00ff00';
-            ctx.font = fontSize + 'px VT323';
+            ctx.font = fontSize + 'px Orbitron';
             for(let i = 0; i < rainDrops.length; i++) {
                 const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
                 ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
@@ -407,9 +570,9 @@
         const ghostRider = document.getElementById('ghostRider');
 
         let playlist = [
-            { name: 'ROCKOT', file: 'rockot.mp3', cover: 'R' },
-            { name: 'SIGMA MUSICART', file: 'sigmamusicart.mp3', cover: 'S' },
-            { name: 'WATERMELLO', file: 'watermello.mp3', cover: 'W' }
+            { name: 'ROCKOT', file: 'rockot.mp3' },
+            { name: 'SIGMA MUSICART', file: 'sigmamusicart.mp3' },
+            { name: 'WATERMELLO', file: 'watermello.mp3' }
         ];
 
         let currentTrack = 0;
@@ -426,10 +589,10 @@
         // Create visualizer bars
         for(let i = 0; i < 32; i++) {
             const bar = document.createElement('div');
-            bar.className = 'bar';
+            bar.className = 'eq-bar';
             visualizer.appendChild(bar);
         }
-        bars = document.querySelectorAll('.bar');
+        bars = document.querySelectorAll('.eq-bar');
 
         function renderPlaylist() {
             playlistDiv.innerHTML = '';
@@ -437,8 +600,7 @@
                 const row = document.createElement('div');
                 row.className = 'track-row';
                 row.innerHTML = `
-                    <div class="cover">${track.cover}</div>
-                    <button class="button playlist-btn" data-track="${index}" title="${track.name}">${String(index+1).padStart(2,'0')}. ${track.name}</button>
+                    <button class="track-button" data-track="${index}" title="${track.name}">${String(index+1).padStart(2,'0')}. ${track.name}</button>
                     <button class="download-btn" data-file="${track.file}">↓</button>
                 `;
                 playlistDiv.appendChild(row);
@@ -447,7 +609,7 @@
         }
 
         function attachPlaylistEvents() {
-            document.querySelectorAll('.playlist-btn').forEach((btn, index) => {
+            document.querySelectorAll('.track-button').forEach((btn, index) => {
                 btn.onclick = () => {
                     loadTrack(index);
                     if (!audio.paused) audio.play();
@@ -461,7 +623,7 @@
                     link.href = file;
                     link.download = file;
                     link.click();
-                    status.textContent = `DOWNLOADING: ${file}`;
+                    status.textContent = `DOWNLOADING...`;
                     setTimeout(() => status.textContent = 'READY', 2000);
                 };
             });
@@ -493,7 +655,7 @@
             }
 
             for(let i = 0; i < 32; i++) {
-                const height = (dataArray[i] / 255) * 50;
+                const height = (dataArray[i] / 255) * 40;
                 bars[i].style.height = Math.max(2, height) + 'px';
             }
         }
@@ -501,11 +663,11 @@
         function loadTrack(index) {
             currentTrack = index;
             audio.src = playlist[index].file;
-            trackInfo.textContent = `TRACK: ${playlist[index].name}`;
-            document.querySelectorAll('.playlist-btn').forEach((btn, i) => {
+            trackInfo.textContent = `${String(index+1).padStart(2,'0')}. ${playlist[index].name}`;
+            document.querySelectorAll('.track-button').forEach((btn, i) => {
                 btn.classList.toggle('active', i === index);
             });
-            status.textContent = `READY: ${playlist[index].file}`;
+            status.textContent = `READY`;
         }
 
         function playPause() {
@@ -513,16 +675,16 @@
             if (audioContext.state === 'suspended') audioContext.resume();
             if (audio.paused) {
                 audio.play().then(() => {
-                    playBtn.textContent = '■ STOP TECHNO';
-                    status.textContent = '► PLAYING...';
+                    playBtn.textContent = '■';
+                    status.textContent = 'PLAYING';
                     updateVisualizer();
                 }).catch(e => {
-                    status.textContent = `PLAY FAIL: CHECK MP3`;
+                    status.textContent = `ERROR`;
                 });
             } else {
                 audio.pause();
-                playBtn.textContent = '► START TECHNO';
-                status.textContent = 'SYSTEM PAUSED';
+                playBtn.textContent = '▶';
+                status.textContent = 'PAUSED';
             }
         }
 
@@ -544,14 +706,16 @@
         loopBtn.addEventListener('click', () => {
             isLoop =!isLoop;
             audio.loop = isLoop;
-            loopBtn.textContent = `LOOP: ${isLoop? 'ON' : 'OFF'}`;
             loopBtn.classList.toggle('active', isLoop);
+            status.textContent = isLoop? 'LOOP ON' : 'LOOP OFF';
+            setTimeout(() => status.textContent = audio.paused? 'PAUSED' : 'PLAYING', 1500);
         });
 
         shuffleBtn.addEventListener('click', () => {
             isShuffle =!isShuffle;
-            shuffleBtn.textContent = `SHUFFLE: ${isShuffle? 'ON' : 'OFF'}`;
             shuffleBtn.classList.toggle('active', isShuffle);
+            status.textContent = isShuffle? 'RANDOM ON' : 'RANDOM OFF';
+            setTimeout(() => status.textContent = audio.paused? 'PAUSED' : 'PLAYING', 1500);
         });
 
         volumeSlider.addEventListener('input', () => {
@@ -572,10 +736,9 @@
                     const name = file.name.replace('.mp3', '').toUpperCase();
                     playlist.push({
                         name: name,
-                        file: url,
-                        cover: name[0] || '?'
+                        file: url
                     });
-                    status.textContent = `ADDED: ${name}`;
+                    status.textContent = `ADDED`;
                 }
             }
             renderPlaylist();
@@ -589,19 +752,11 @@
         });
 
         audio.addEventListener('loadeddata', () => {
-            status.textContent = 'TRACK LOADED - TAP START';
+            status.textContent = 'LOADED';
         });
 
         audio.addEventListener('error', () => {
-            const err = audio.error;
-            let msg = 'UNKNOWN';
-            if (err) {
-                if (err.code === 1) msg = 'ABORTED';
-                if (err.code === 2) msg = 'NETWORK - BAD FILE';
-                if (err.code === 3) msg = 'DECODE - REUPLOAD MP3';
-                if (err.code === 4) msg = '404 NOT FOUND';
-            }
-            status.textContent = `ERROR: ${msg}`;
+            status.textContent = `ERROR`;
         });
 
         audio.addEventListener('ended', () => {
