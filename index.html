@@ -32,14 +32,14 @@
             max-width: 600px;
             height: auto;
             z-index: 4;
-            opacity: 0.25;
+            opacity: 0;
             animation: ghost-intro 2s ease-out 0.3s forwards;
             pointer-events: none;
         }
 
         @keyframes ghost-intro {
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); filter: blur(30px); }
-            100% { opacity: 0.25; transform: translate(-50%, -50%) scale(1); filter: blur(0px); }
+            100% { opacity: 0.22; transform: translate(-50%, -50%) scale(1); filter: blur(0px); }
         }
 
 .ghost-rider {
@@ -130,7 +130,7 @@
             position: absolute;
             bottom: 30px;
             right: 30px;
-            width: 520px;
+            width: 540px;
             background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%);
             border: 3px solid #333;
             border-radius: 8px;
@@ -318,7 +318,7 @@
             border-radius: 3px;
             outline: none;
             -webkit-appearance: none;
-        }
+      }
 #volume::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 18px;
@@ -328,7 +328,7 @@
             border-radius: 50%;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
+      }
 
 #volDisplay {
             font-size: 12px;
@@ -338,96 +338,127 @@
             min-width: 45px;
         }
 
-        /* PLAYLIST STYLE AUTORADIO */
-.playlist-container {
-            max-height: 180px;
-            overflow-y: auto;
-            margin: 8px 0;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid #333;
-            border-radius: 3px;
-            padding: 5px;
+        /* MENU DÉROULANT TRACK */
+.dropdown-container {
+            position: relative;
         }
 
-.playlist-container::-webkit-scrollbar {
+.dropdown-menu {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 2px solid #444;
+            border-radius: 4px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
+            margin-bottom: 5px;
+        }
+
+.dropdown-menu.open {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+.dropdown-menu::-webkit-scrollbar {
             width: 6px;
         }
-.playlist-container::-webkit-scrollbar-track {
+.dropdown-menu::-webkit-scrollbar-track {
             background: #0a0a0a;
         }
-.playlist-container::-webkit-scrollbar-thumb {
+.dropdown-menu::-webkit-scrollbar-thumb {
             background: #00ff41;
             border-radius: 3px;
         }
 
-.track-row {
-            display: flex;
-            gap: 6px;
-            margin: 4px 0;
-            align-items: center;
-      }
-
-.track-button {
-            flex: 1;
-            background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
-            border: 1px solid #333;
-            border-radius: 3px;
-            color: #00ff41;
-            padding: 10px 12px;
-            font-family: 'Orbitron', monospace;
-            font-size: 11px;
+.dropdown-item {
+            padding: 12px;
+            border-bottom: 1px solid #333;
             cursor: pointer;
-            text-align: left;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 12px;
+            color: #00ff41;
             text-shadow: 0 0 3px #00ff41;
             transition: all 0.1s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-.track-button:active {
-            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
-            transform: translateX(2px);
+
+.dropdown-item:hover {
+            background: rgba(0,255,65,0.1);
         }
-.track-button.active {
+
+.dropdown-item.active {
             background: linear-gradient(180deg, #00aa00 0%, #006600 100%);
             color: #000;
             text-shadow: none;
-            box-shadow: 0 0 10px #00ff00;
+            font-weight: 700;
         }
 
-.download-btn {
-            background: linear-gradient(180deg, #3a3a3a 0%, #1a1a1a 100%);
+.delete-track {
+            background: linear-gradient(180deg, #aa0000 0%, #660000 100%);
             border: 1px solid #444;
             border-radius: 3px;
-            color: #00ff41;
-            padding: 10px;
-            font-size: 14px;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 10px;
             cursor: pointer;
-            width: 40px;
-            text-shadow: 0 0 3px #00ff41;
         }
-.download-btn:active {
-            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+.delete-track:active {
+            background: linear-gradient(180deg, #660000 0%, #440000 100%);
         }
 
-.upload-zone {
-            border: 2px dashed #333;
-            border-radius: 4px;
-            padding: 12px;
-            margin: 8px 0;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 11px;
-            color: #00ff41;
-            text-shadow: 0 0 3px #00ff41;
-            background: rgba(0,0,0,0.2);
+        /* BIBLIOTHÈQUE */
+.library-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vw;
+            max-width: 600px;
+            max-height: 80vh;
+            background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 3px solid #444;
+            border-radius: 8px;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 0 50px rgba(0,0,0,0.9);
+            display: none;
+            overflow-y: auto;
         }
-.upload-zone:active {
-            background: rgba(0, 255, 0, 0.1);
-            border-color: #00ff41;
-            box-shadow: 0 0 15px rgba(0,255,0,0.3);
-      }
+
+.library-modal.open {
+            display: block;
+        }
+
+.library-header {
+            font-size: 20px;
+            font-weight: 900;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 3px;
+        }
+
+.library-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(180deg, #aa0000 0%, #660000 100%);
+            border: 2px solid #444;
+            border-radius: 4px;
+            color: #fff;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
 #fileInput { display: none; }
 
 .scanlines {
@@ -438,33 +469,32 @@
 
         /* MOBILE */
         @media (max-width: 768px) {
-    .ghost-container {
+  .ghost-container {
               top: 30%;
               left: 50%;
               width: 85vw;
               max-width: 400px;
           }
-    .ghost-container { opacity: 0.3!important; }
+  .ghost-container { opacity: 0.3!important; }
 
-    .car-stereo {
+  .car-stereo {
               bottom: 10px;
               left: 50%;
               right: auto;
               transform: translateX(-50%);
               width: 96vw;
               padding: 12px;
-              max-height: 58vh;
+              max-height: 60vh;
           }
-    .title-top { font-size: 28px; top: 10px; letter-spacing: 4px; }
-    .footer-sig { font-size: 9px; bottom: 5px; left: 5px; }
-    .lcd-text { font-size: 12px; }
-    .track-display { font-size: 15px; }
-    .timer-display { font-size: 20px; }
-    .car-button { padding: 12px 8px; font-size: 11px; }
-    .play-button { width: 50px; height: 50px; font-size: 20px; }
-    .eq-visualizer { height: 35px; }
-    .eq-bar { width: 10px; }
-    .playlist-container { max-height: 140px; }
+  .title-top { font-size: 28px; top: 10px; letter-spacing: 4px; }
+  .footer-sig { font-size: 9px; bottom: 5px; left: 5px; }
+  .lcd-text { font-size: 12px; }
+  .track-display { font-size: 15px; }
+  .timer-display { font-size: 20px; }
+  .car-button { padding: 12px 8px; font-size: 11px; }
+  .play-button { width: 50px; height: 50px; font-size: 20px; }
+  .eq-visualizer { height: 35px; }
+  .eq-bar { width: 10px; }
         }
     </style>
 </head>
@@ -495,6 +525,10 @@
             <!-- BOUTONS PRINCIPAUX -->
             <div class="button-row">
                 <button class="car-button big play-button" id="playBtn">▶</button>
+                <div class="dropdown-container">
+                    <button class="car-button" id="trackBtn">TRACK</button>
+                    <div class="dropdown-menu" id="trackDropdown"></div>
+                </div>
                 <button class="car-button" id="loopBtn">LOOP</button>
                 <button class="car-button" id="shuffleBtn">RND</button>
             </div>
@@ -506,20 +540,69 @@
                 <span id="volDisplay">100%</span>
             </div>
 
-            <!-- PLAYLIST -->
-            <div class="playlist-container" id="playlist"></div>
-
-            <!-- UPLOAD -->
-            <div class="upload-zone" id="uploadZone">
-                [+] ADD MP3
-                <input type="file" id="fileInput" accept="audio/mpeg" multiple>
+            <!-- BIBLIOTHÈQUE -->
+            <div class="button-row">
+                <button class="car-button" id="addBtn">[+] ADD MP3</button>
+                <button class="car-button" id="libBtn">LIBRARY</button>
             </div>
+            <input type="file" id="fileInput" accept="audio/mpeg" multiple>
         </div>
+    </div>
+
+    <!-- MODAL BIBLIOTHÈQUE -->
+    <div class="library-modal" id="libraryModal">
+        <button class="library-close" id="closeLibBtn">X</button>
+        <div class="library-header">TRACK LIBRARY</div>
+        <div id="libraryList"></div>
     </div>
 
     <audio id="matrixAudio" preload="metadata" crossorigin="anonymous"></audio>
 
     <script>
+        // IndexedDB pour stockage persistant
+        let db;
+        const dbName = 'MatrixLibraryDB';
+        const storeName = 'tracks';
+
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(dbName, 1);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    db = request.result;
+                    resolve(db);
+                };
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    if (!db.objectStoreNames.contains(storeName)) {
+                        db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+            });
+        }
+
+        async function saveTrack(name, blob) {
+            const tx = db.transaction([storeName], 'readwrite');
+            const store = tx.objectStore(storeName);
+            await store.add({ name, blob, date: Date.now() });
+        }
+
+        async function getAllTracks() {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction([storeName], 'readonly');
+                const store = tx.objectStore(storeName);
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function deleteTrack(id) {
+            const tx = db.transaction([storeName], 'readwrite');
+            const store = tx.objectStore(storeName);
+            await store.delete(id);
+        }
+
         // Matrix rain
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
@@ -564,17 +647,17 @@
         const volDisplay = document.getElementById('volDisplay');
         const loopBtn = document.getElementById('loopBtn');
         const shuffleBtn = document.getElementById('shuffleBtn');
-        const playlistDiv = document.getElementById('playlist');
-        const uploadZone = document.getElementById('uploadZone');
+        const trackBtn = document.getElementById('trackBtn');
+        const trackDropdown = document.getElementById('trackDropdown');
+        const addBtn = document.getElementById('addBtn');
+        const libBtn = document.getElementById('libBtn');
         const fileInput = document.getElementById('fileInput');
         const ghostRider = document.getElementById('ghostRider');
+        const libraryModal = document.getElementById('libraryModal');
+        const closeLibBtn = document.getElementById('closeLibBtn');
+        const libraryList = document.getElementById('libraryList');
 
-        let playlist = [
-            { name: 'ROCKOT', file: 'rockot.mp3' },
-            { name: 'SIGMA MUSICART', file: 'sigmamusicart.mp3' },
-            { name: 'WATERMELLO', file: 'watermello.mp3' }
-        ];
-
+        let playlist = [];
         let currentTrack = 0;
         let isLoop = false;
         let isShuffle = false;
@@ -594,37 +677,61 @@
         }
         bars = document.querySelectorAll('.eq-bar');
 
-        function renderPlaylist() {
-            playlistDiv.innerHTML = '';
-            playlist.forEach((track, index) => {
-                const row = document.createElement('div');
-                row.className = 'track-row';
-                row.innerHTML = `
-                    <button class="track-button" data-track="${index}" title="${track.name}">${String(index+1).padStart(2,'0')}. ${track.name}</button>
-                    <button class="download-btn" data-file="${track.file}">↓</button>
-                `;
-                playlistDiv.appendChild(row);
-            });
-            attachPlaylistEvents();
+        async function loadLibrary() {
+            playlist = await getAllTracks();
+            renderTrackDropdown();
+            renderLibraryList();
+            if (playlist.length > 0) {
+                loadTrack(0);
+            }
         }
 
-        function attachPlaylistEvents() {
-            document.querySelectorAll('.track-button').forEach((btn, index) => {
-                btn.onclick = () => {
+        function renderTrackDropdown() {
+            trackDropdown.innerHTML = '';
+            if (playlist.length === 0) {
+                trackDropdown.innerHTML = '<div class="dropdown-item">NO TRACKS</div>';
+                return;
+            }
+            playlist.forEach((track, index) => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                if (index === currentTrack) item.classList.add('active');
+                item.innerHTML = `
+                    <span>${String(index+1).padStart(2,'0')}. ${track.name}</span>
+                `;
+                item.onclick = () => {
                     loadTrack(index);
+                    trackDropdown.classList.remove('open');
                     if (!audio.paused) audio.play();
                 };
+                trackDropdown.appendChild(item);
             });
-            document.querySelectorAll('.download-btn').forEach(btn => {
-                btn.onclick = (e) => {
+        }
+
+        function renderLibraryList() {
+            libraryList.innerHTML = '';
+            if (playlist.length === 0) {
+                libraryList.innerHTML = '<div style="text-align:center; padding:20px; color:#00ff41; text-shadow:0 0 5px #00ff41;">NO TRACKS IN LIBRARY</div>';
+                return;
+            }
+            playlist.forEach((track, index) => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.style.marginBottom = '5px';
+                item.innerHTML = `
+                    <span>${String(index+1).padStart(2,'0')}. ${track.name}</span>
+                    <button class="delete-track" data-id="${track.id}">DEL</button>
+                `;
+                libraryList.appendChild(item);
+            });
+            document.querySelectorAll('.delete-track').forEach(btn => {
+                btn.onclick = async (e) => {
                     e.stopPropagation();
-                    const file = btn.getAttribute('data-file');
-                    const link = document.createElement('a');
-                    link.href = file;
-                    link.download = file;
-                    link.click();
-                    status.textContent = `DOWNLOADING...`;
-                    setTimeout(() => status.textContent = 'READY', 2000);
+                    const id = parseInt(btn.getAttribute('data-id'));
+                    await deleteTrack(id);
+                    await loadLibrary();
+                    status.textContent = 'TRACK DELETED';
+                    setTimeout(() => status.textContent = audio.paused? 'PAUSED' : 'PLAYING', 2000);
                 };
             });
         }
@@ -646,7 +753,6 @@
             requestAnimationFrame(updateVisualizer);
             analyser.getByteFrequencyData(dataArray);
 
-            // BASS PULSE GHOST RIDER HELLFIRE
             let bass = (dataArray[0] + dataArray[1] + dataArray[2] + dataArray[3]) / 4;
             if (bass > 180 && Date.now() - lastBassHit > 80) {
                 ghostRider.classList.add('bass-hit');
@@ -661,16 +767,21 @@
         }
 
         function loadTrack(index) {
+            if (playlist.length === 0) return;
             currentTrack = index;
-            audio.src = playlist[index].file;
-            trackInfo.textContent = `${String(index+1).padStart(2,'0')}. ${playlist[index].name}`;
-            document.querySelectorAll('.track-button').forEach((btn, i) => {
-                btn.classList.toggle('active', i === index);
-            });
+            const track = playlist[index];
+            const url = URL.createObjectURL(track.blob);
+            audio.src = url;
+            trackInfo.textContent = `${String(index+1).padStart(2,'0')}. ${track.name}`;
+            renderTrackDropdown();
             status.textContent = `READY`;
         }
 
         function playPause() {
+            if (playlist.length === 0) {
+                status.textContent = 'NO TRACKS';
+                return;
+            }
             initAudioContext();
             if (audioContext.state === 'suspended') audioContext.resume();
             if (audio.paused) {
@@ -689,6 +800,7 @@
         }
 
         function nextTrack() {
+            if (playlist.length === 0) return;
             if (isShuffle) {
                 let next;
                 do { next = Math.floor(Math.random() * playlist.length); }
@@ -702,6 +814,16 @@
         }
 
         playBtn.addEventListener('click', playPause);
+
+        trackBtn.addEventListener('click', () => {
+            trackDropdown.classList.toggle('open');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!trackBtn.contains(e.target) &&!trackDropdown.contains(e.target)) {
+                trackDropdown.classList.remove('open');
+            }
+        });
 
         loopBtn.addEventListener('click', () => {
             isLoop =!isLoop;
@@ -723,27 +845,29 @@
             volDisplay.textContent = volumeSlider.value + '%';
         });
 
-        // Upload system
-        uploadZone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
+        addBtn.addEventListener('click', () => fileInput.click());
+
+        libBtn.addEventListener('click', () => {
+            libraryModal.classList.add('open');
         });
 
-        function handleFiles(files) {
+        closeLibBtn.addEventListener('click', () => {
+            libraryModal.classList.remove('open');
+        });
+
+        fileInput.addEventListener('change', async (e) => {
+            const files = e.target.files;
             for (let file of files) {
                 if (file.type === 'audio/mpeg') {
-                    const url = URL.createObjectURL(file);
                     const name = file.name.replace('.mp3', '').toUpperCase();
-                    playlist.push({
-                        name: name,
-                        file: url
-                    });
-                    status.textContent = `ADDED`;
+                    await saveTrack(name, file);
                 }
             }
-            renderPlaylist();
+            await loadLibrary();
+            status.textContent = `${files.length} TRACK(S) ADDED`;
             setTimeout(() => status.textContent = 'READY', 2000);
-        }
+            fileInput.value = '';
+        });
 
         audio.addEventListener('timeupdate', () => {
             const cur = formatTime(audio.currentTime);
@@ -771,8 +895,9 @@
         }
 
         // Init
-        renderPlaylist();
-        loadTrack(0);
+        initDB().then(() => {
+            loadLibrary();
+        });
 
         window.addEventListener('resize', () => {
             resizeCanvas();
