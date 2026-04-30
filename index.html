@@ -932,7 +932,7 @@
             if (!isLoop) nextTrack();
         });
 
-        function formatTime(seconds) {
+         function formatTime(seconds) {
             if (isNaN(seconds)) return '0:00';
             const min = Math.floor(seconds / 60);
             const sec = Math.floor(seconds % 60);
@@ -946,8 +946,7 @@
 
         window.addEventListener('resize', () => {
             resizeCanvas();
-            columns = Math.floor(canvas.width / font
-
+            columns = Math.floor(canvas.width / fontSize);
             rainDrops = [];
             for(let x = 0; x < columns; x++) { rainDrops[x] = 1; }
         });
